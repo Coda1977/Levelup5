@@ -1,17 +1,17 @@
 /**
- * ESLint Flat Config for LevelUp5 (compatible with ESLint 8.x)
+ * ESLint Config for LevelUp5 (CommonJS)
  * - Uses @typescript-eslint v7 parser/plugin (matches package.json)
  * - Uses Next core-web-vitals and React Hooks rules
  * - Prettier handles formatting (no conflicting rules here)
  */
 
-import tsParser from '@typescript-eslint/parser';
-import tsPlugin from '@typescript-eslint/eslint-plugin';
-import reactHooks from 'eslint-plugin-react-hooks';
-import next from '@next/eslint-plugin-next';
+const tsParser = require('@typescript-eslint/parser');
+const tsPlugin = require('@typescript-eslint/eslint-plugin');
+const reactHooks = require('eslint-plugin-react-hooks');
+const next = require('@next/eslint-plugin-next');
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
-export default [
+module.exports = [
   {
     name: 'ignores',
     ignores: [
