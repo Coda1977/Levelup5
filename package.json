@@ -1,0 +1,55 @@
+{
+  "name": "levelup5",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LevelUp5 - Mobile-first management development app (governance-first scaffold).",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --check .",
+    "format:write": "prettier --write .",
+    "prepare": "husky install",
+    "test": "node -e \"process.exit(0)\""
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ],
+    "*.{md,json,css}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "next": "14.2.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "19.3.0",
+    "@commitlint/config-conventional": "19.2.2",
+    "@next/eslint-plugin-next": "14.2.5",
+    "@types/node": "20.14.12",
+    "@types/react": "18.3.5",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
+    "autoprefixer": "10.4.20",
+    "eslint": "8.57.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-react": "7.35.0",
+    "eslint-plugin-react-hooks": "4.6.2",
+    "husky": "9.1.5",
+    "lint-staged": "15.2.9",
+    "globals": "15.9.0",
+    "postcss": "8.4.41",
+    "prettier": "3.3.3",
+    "tailwindcss": "3.4.10",
+    "typescript": "5.5.4"
+  }
+}

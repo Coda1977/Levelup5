@@ -1,0 +1,154 @@
+{
+  "version": 1,
+  "description": "MCP configuration for LevelUp5. Phase 1 enables repo-context, filesystem (write allowlist), ripgrep search, and git. Phase 2 enables Supabase SQL for dev-only migrations.",
+  "safety": {
+    "rateLimits": {
+      "fsWritesPerMinute": 30,
+      "searchesPerMinute": 60,
+      "gitOpsPerMinute": 20,
+      "sqlExecsPerMinute": 10
+    },
+    "denyPatterns": [
+      "**/*.env",
+      "**/.env*",
+      "node_modules/**",
+      ".next/**",
+      "supabase/.temp/**"
+    ]
+  },
+  "indexing": {
+    "include": [
+      "src/**/*",
+      "supabase/migrations/**/*.sql",
+      "agents/prompts/**/*.md",
+      "docs/**/*.md",
+      ".github/**/*.md",
+      "*.md",
+      "SECURITY.md",
+      "ARCHITECTURE.md",
+      "CONTRIBUTING.md",
+      "AGENT_GUIDELINES.md",
+      "README.md"
+    ],
+    "exclude": [
+      "node_modules/**",
+      ".next/**",
+      "supabase/.temp/**",
+      "coverage/**",
+      "dist/**",
+      "out/**",
+      "build/**"
+    ],
+    "chunking": {
+      "maxChars": 1200,
+      "overlapChars": 120
+    }
+  },
+  "servers": [
+    {
+      "name": "repo-context",
+      "type": "context-index",
+      "enabled": true,
+      "config": {
+        "sourceGlobs": ["${indexing.include}"],
+        "excludeGlobs": ["${indexing.exclude}"],
+        "chunking": "${indexing.chunking}"
+      }
+    },
+    {
+      "name": "filesystem",
+      "type": "fs",
+      "enabled": true,
+      "config": {
+        "writeAllowlist": [
+          "src/**",
+          "supabase/migrations/**",
+          "docs/**",
+          ".github/**",
+          "agents/**",
+          "*.md",
+          "*.json",
+          "*.jsonc",
+          "*.js",
+          "*.cjs",
+          "*.mjs",
+          "*.ts",
+          "*.tsx",
+          "*.css",
+          "*.config.*",
+          "mcp-config.json"
+        ],
+        "writeDenylist": [
+          "node_modules/**",
+          ".next/**",
+          "**/*.env",
+          "**/.env*",
+          "supabase/.temp/**",
+          "**/*.key",
+          "**/*.pem"
+        ]
+      }
+    },
+    {
+      "name": "ripgrep",
+      "type": "search",
+      "enabled": true,
+      "config": {
+        "binary": "rg",
+        "defaultArgs": ["--hidden", "--line-number", "--no-heading", "--color", "never"]
+      }
+    },
+    {
+      "name": "git",
+      "type": "git",
+      "enabled": true,
+      "config": {
+        "protectedBranches": ["main"],
+        "branchNaming": "feature/{topic}",
+        "requireConventionalCommits": true,
+        "preventDirectPushToProtected": true
+      }
+    },
+    {
+      "name": "supabase-sql",
+      "type": "sql",
+      "enabled": true,
+      "config": {
+        "environment": "dev",
+        "connection": {
+          "supabaseUrlEnv": "NEXT_PUBLIC_SUPABASE_URL",
+          "anonKeyEnv": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+          "serviceRoleEnv": "SUPABASE_SERVICE_ROLE_KEY"
+        },
+        "writeAllowlist": ["supabase/migrations/**"],
+        "writeDenylist": [
+          "supabase/**/*.sql",
+          "!supabase/migrations/**"
+        ],
+        "guards": {
+          "denyProd": true,
+          "requireMigrationPathForDDL": true,
+          "blockTruncateDropOutsideMigrations": true
+        }
+      }
+    }
+  ],
+  "policies": {
+    "clientServerBoundary": {
+      "denyDirectDbAccessFromClient": true,
+      "allowedClientOps": ["fetch", "POST/GET via /api/*"]
+    },
+    "sanitization": {
+      "requiredForHtml": true,
+      "allowlistIframes": [
+        "https://www.youtube.com/embed/",
+        "https://open.spotify.com/embed/"
+      ]
+    },
+    "rls": {
+      "requiredForNewTables": true,
+      "ownerScopePredicate": "auth.uid() = user_id",
+      "publishedContentPredicate": "is_published = true"
+    }
+  }
+}

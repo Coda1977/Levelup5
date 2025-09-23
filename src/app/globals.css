@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design Tokens */
+:root {
+  --bg-primary: #F5F0E8;
+  --text-primary: #1A1A1A;
+  --accent-yellow: #FFD60A;
+  --accent-blue: #003566;
+  --text-secondary: #4A4A4A;
+  --white: #FFFFFF;
+  --font-sans: var(--font-sans, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji");
+}
+
+/* Base */
+html, body, #__next {
+  height: 100%;
+}
+
+html {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+.h1-hero {
+  font-size: clamp(48px, 8vw, 80px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.1;
+}
+
+.h2-section {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.text-body {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.text-small {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Layout helpers */
+.section-container {
+  padding-top: 5rem; /* 80px */
+  padding-bottom: 5rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .section-container {
+    padding-top: 8rem; /* 128px */
+    padding-bottom: 8rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+.container-max {
+  max-width: 72rem; /* ~1152px */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Components (align with design rules) */
+.btn-primary {
+  @apply bg-gray-900 text-[var(--bg-primary)] px-10 py-4 rounded-full font-semibold text-lg transition-all duration-300;
+}
+
+.btn-primary:hover {
+  @apply -translate-y-1 shadow-lg;
+}
+
+/* Feature Card */
+.card-feature {
+  @apply bg-white p-12 rounded-2xl transition-all duration-300;
+}
+.card-feature:hover { @apply -translate-y-2 shadow-xl; }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeIn 0.6s ease-out; }
+
+/* Accessibility: focus styles */
+:focus-visible {
+  outline: 2px solid var(--accent-yellow);
+  outline-offset: 2px;
+}

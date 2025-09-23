@@ -1,0 +1,46 @@
+# Node / Next.js
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+.nyc_output/
+
+# Env and local configs (never commit secrets)
+.env
+.env.*
+!.env.example
+!.env.local.example
+.vercel/
+.now/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+logs/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.swn
+.idea/
+.vscode/
+*.code-workspace
+
+# Supabase local artifacts
+supabase/.temp/
+supabase/.branches/
+supabase/generated/
+supabase/.env
+
+# Misc
+*.local
+*.cache/
+.cache/
+*.tgz
