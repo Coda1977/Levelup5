@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "description": "LevelUp5 - Mobile-first management development app (governance-first scaffold).",
-  
   "engines": {
     "node": ">=20"
   },
@@ -51,6 +50,7 @@
     "lint-staged": "15.2.9",
     "postcss": "8.4.41",
     "prettier": "3.3.3",
+    "supabase": "^2.45.5",
     "tailwindcss": "3.4.10",
     "typescript": "5.5.4"
   }
