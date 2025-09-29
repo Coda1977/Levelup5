@@ -36,6 +36,7 @@
     "@commitlint/cli": "19.3.0",
     "@commitlint/config-conventional": "19.2.2",
     "@next/eslint-plugin-next": "14.2.5",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/node": "20.14.12",
     "@types/react": "18.3.5",
     "@typescript-eslint/eslint-plugin": "7.18.0",

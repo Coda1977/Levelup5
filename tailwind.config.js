@@ -17,8 +17,20 @@ module.exports = {
       },
       fontFamily: {
         sans: ["var(--font-sans)"]
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            color: "var(--text-primary)",
+            a: { color: "var(--accent-blue)", textDecoration: "underline" },
+            h1: { color: "var(--text-primary)" },
+            h2: { color: "var(--text-primary)" },
+            h3: { color: "var(--text-primary)" },
+            strong: { color: "var(--text-primary)" }
+          }
+        }
       }
     }
   },
-  plugins: []
+  plugins: [require("@tailwindcss/typography")]
 };

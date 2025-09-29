@@ -58,17 +58,20 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // if user is not signed in and the current path is not /auth/login, redirect the user to /auth/login
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/auth/login') &&
-    !request.nextUrl.pathname.startsWith('/auth/signup')
-  ) {
+  // Public routes (unauthenticated access allowed)
+  const pathname = request.nextUrl.pathname;
+  const isAuthPath =
+    pathname.startsWith('/auth/login') || pathname.startsWith('/auth/signup');
+  const isPublicPath =
+    pathname === '/' || pathname.startsWith('/learn');
+
+  // Require auth for non-public paths (e.g., /admin, /chat)
+  if (!user && !isAuthPath && !isPublicPath) {
     return NextResponse.redirect(new URL('/auth/login', request.url));
   }
 
-  // if user is signed in and the current path is /auth/login, redirect the user to /learn
-  if (user && request.nextUrl.pathname.startsWith('/auth/login')) {
+  // If signed in, prevent visiting auth pages
+  if (user && isAuthPath) {
     return NextResponse.redirect(new URL('/learn', request.url));
   }
 
