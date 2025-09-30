@@ -9,6 +9,11 @@ type Chapter = {
   is_published: boolean;
   display_order: number;
 };
+type Progress = {
+  user_id: string;
+  chapter_id: string;
+  completed_at: string;
+};
 
 async function fetchJSON<T>(path: string): Promise<T> {
   const h = headers();
@@ -32,6 +37,21 @@ export default async function LearnPage() {
       chaptersByCategory.set(c.id, data || []);
     })
   );
+
+  // Fetch user's progress for all chapters
+  const completedChapterIds = new Set<string>();
+  try {
+    const progressRes = await fetch(
+      `${process.env.NODE_ENV === 'development' ? 'http' : 'https'}://${headers().get('host')}/api/progress`,
+      { cache: 'no-store' }
+    );
+    if (progressRes.ok) {
+      const { data: progressData } = (await progressRes.json()) as { data: Progress[] };
+      progressData.forEach((p) => completedChapterIds.add(p.chapter_id));
+    }
+  } catch {
+    // If progress fetch fails (e.g., not authenticated), just continue without progress data
+  }
 
   const hasAnyPublished = categories.some((c) => (chaptersByCategory.get(c.id) || []).length > 0);
 
@@ -60,24 +80,32 @@ export default async function LearnPage() {
                 <section key={category.id}>
                   <h2 className="h2-section mb-6">{category.title}</h2>
                   <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {items.map((ch) => (
-                      <li key={ch.id} className="card-feature">
-                        <div className="flex flex-col h-full">
-                          <h3 className="text-xl font-semibold mb-2">{ch.title}</h3>
-                          <p className="text-small text-text-secondary mb-6">
-                            Published • Order {ch.display_order}
-                          </p>
-                          <div className="mt-auto">
-                            <Link
-                              href={`/learn/${ch.id}`}
-                              className="inline-block btn-primary"
-                            >
-                              Read chapter
-                            </Link>
+                    {items.map((ch) => {
+                      const isCompleted = completedChapterIds.has(ch.id);
+                      return (
+                        <li key={ch.id} className="card-feature relative">
+                          {isCompleted && (
+                            <div className="absolute top-4 right-4 bg-accent-green text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">
+                              ✓
+                            </div>
+                          )}
+                          <div className="flex flex-col h-full">
+                            <h3 className="text-xl font-semibold mb-2">{ch.title}</h3>
+                            <p className="text-small text-text-secondary mb-6">
+                              {isCompleted ? 'Completed' : 'Published'} • Order {ch.display_order}
+                            </p>
+                            <div className="mt-auto">
+                              <Link
+                                href={`/learn/${ch.id}`}
+                                className="inline-block btn-primary"
+                              >
+                                {isCompleted ? 'Review chapter' : 'Read chapter'}
+                              </Link>
+                            </div>
                           </div>
-                        </div>
-                      </li>
-                    ))}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </section>
               );

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 import { sanitizeHtml } from '@/lib/sanitize';
+import { MarkCompleteButton } from '@/components/MarkCompleteButton';
 
 type Params = { params: { id: string } };
 
@@ -12,6 +13,12 @@ type Chapter = {
   content: string;
   is_published: boolean;
   display_order: number;
+};
+
+type Progress = {
+  user_id: string;
+  chapter_id: string;
+  completed_at: string;
 };
 
 async function fetchJSON(path: string) {
@@ -40,6 +47,14 @@ export default async function ChapterPage({ params }: Params) {
   }
   const { data: list } = (await listRes.json()) as { data: Chapter[] };
 
+  // Fetch user's progress for this chapter
+  const progressRes = await fetchJSON(`/api/progress?chapterId=${params.id}`);
+  let isCompleted = false;
+  if (progressRes.ok) {
+    const { data: progressData } = (await progressRes.json()) as { data: Progress[] };
+    isCompleted = progressData && progressData.length > 0;
+  }
+
   const idx = list.findIndex((c) => c.id === chapter.id);
   const prev = idx > 0 ? list[idx - 1] : undefined;
   const next = idx >= 0 && idx < list.length - 1 ? list[idx + 1] : undefined;
@@ -64,6 +79,10 @@ export default async function ChapterPage({ params }: Params) {
           // Content sanitized via strict allowlist sanitizer
           dangerouslySetInnerHTML={{ __html: safeHtml }}
         />
+
+        <div className="mt-8 flex justify-center">
+          <MarkCompleteButton chapterId={chapter.id} initialCompleted={isCompleted} />
+        </div>
 
         <nav className="mt-10 flex items-center justify-between gap-4">
           {prev ? (
