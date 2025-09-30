@@ -6,7 +6,7 @@ System overview
 - Frontend: Next.js (App Router, TypeScript, Tailwind)
 - API layer: Next.js Route Handlers (server-only)
 - Auth/DB: Supabase (Auth + Postgres with RLS)
-- AI: Anthropic (server-only usage, model claude-3-7-sonnet)
+- AI: Anthropic (server-only usage, model claude-sonnet-4-20250514)
 - Observability: minimal DB error logs (expand later), CI enforcement
 - Governance: PR template, CI checks, branch protections, Conventional Commits
 
@@ -40,10 +40,10 @@ Top-level structure (created progressively)
 - Middleware
   - [src/middleware.ts](LevelUp5/src/middleware.ts) (gates Learn/Chat/Admin; login public)
 - Supabase migrations (RLS included)
-  - [supabase/migrations/0001_user_profiles.sql](LevelUp5/supabase/migrations/0001_user_profiles.sql)
-  - [supabase/migrations/0002_first_admin_seed.sql](LevelUp5/supabase/migrations/0002_first_admin_seed.sql)
-  - [supabase/migrations/0003_content.sql](LevelUp5/supabase/migrations/0003_content.sql)
-  - [supabase/migrations/0004_progress.sql](LevelUp5/supabase/migrations/0004_progress.sql)
+  - [supabase/migrations/0001_initial_schema.sql](LevelUp5/supabase/migrations/0001_initial_schema.sql)
+  - [supabase/migrations/0002_content_schema.sql](LevelUp5/supabase/migrations/0002_content_schema.sql)
+  - [supabase/migrations/0003_progress_schema.sql](LevelUp5/supabase/migrations/0003_progress_schema.sql)
+  - [supabase/migrations/0004_chat_schema.sql](LevelUp5/supabase/migrations/0004_chat_schema.sql)
 
 Client–server boundary
 - Client components NEVER import a database client for direct queries
@@ -82,10 +82,16 @@ Auth flow
 - Middleware: [src/middleware.ts](LevelUp5/src/middleware.ts) redirects unauthenticated users from /learn, /chat, /admin to /auth/login
 - First admin promotion via seed migration: [supabase/migrations/0002_first_admin_seed.sql](LevelUp5/supabase/migrations/0002_first_admin_seed.sql)
 
-AI integration (Week 4)
+AI integration (Implemented)
 - Server-only route streams responses from Anthropic using ANTHROPIC_API_KEY (never exposed to client)
+- Model: Claude Sonnet 4 (claude-sonnet-4-20250514)
 - System prompt stored in [src/lib/system-prompt.ts](LevelUp5/src/lib/system-prompt.ts)
+  - Direct, practical coaching style
+  - Framework-agnostic approach
+  - Structured responses with follow-up questions
 - Conversations/messages persisted under user ownership; strict RLS
+- Rate limiting: 10 messages per minute per user
+- Real-time streaming via Server-Sent Events
 
 Testing strategy (minimal)
 - [src/__tests__/core/auth.test.ts](LevelUp5/src/__tests__/core/auth.test.ts): can users sign up/log in?
