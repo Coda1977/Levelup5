@@ -64,6 +64,12 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith('/auth/login') || pathname.startsWith('/auth/signup');
   const isPublicPath =
     pathname === '/' || pathname.startsWith('/learn');
+  const isApiRoute = pathname.startsWith('/api');
+
+  // Allow all API routes to handle their own auth
+  if (isApiRoute) {
+    return response;
+  }
 
   // Require auth for non-public paths (e.g., /admin, /chat)
   if (!user && !isAuthPath && !isPublicPath) {
