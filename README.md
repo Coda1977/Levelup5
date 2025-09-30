@@ -121,7 +121,7 @@ Mobile-first management development app. Governance-first setup to ensure safe, 
 - Database: Supabase EU
 - Auth: Email + Password (no magic links)
 - Fonts: Inter via next/font
-- AI: Anthropic model id claude-3-7-sonnet (server-side only)
+- AI: Anthropic Claude Sonnet 4 (server-side only)
 - Brand: LevelUp
 
 Security notice
@@ -166,7 +166,7 @@ Create a local .env.local (never commit) from the example:
 
 - Anthropic (add after scaffold or keep placeholder)
   - ANTHROPIC_API_KEY=YOUR_ANTHROPIC_KEY
-  - ANTHROPIC_MODEL=claude-3-7-sonnet
+  - ANTHROPIC_MODEL=claude-sonnet-4-20250514
 
 Branching strategy
 - Create short-lived feature branches: feature/auth, feature/content, feature/admin
