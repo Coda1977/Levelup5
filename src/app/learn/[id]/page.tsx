@@ -1,20 +1,50 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 import { sanitizeHtml } from '@/lib/sanitize';
-import { getChapterById, getPrevNextChapter } from '@/lib/mock';
 
 type Params = { params: { id: string } };
 
-export default function ChapterPage({ params }: Params) {
-  const chapter = getChapterById(params.id);
+type Chapter = {
+  id: string;
+  category_id: string;
+  title: string;
+  content: string;
+  is_published: boolean;
+  display_order: number;
+};
 
-  // Chapter must exist and be published for end users
-  if (!chapter || !chapter.isPublished) {
+async function fetchJSON(path: string) {
+  const h = headers();
+  const host = h.get('host')!;
+  const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
+  const res = await fetch(`${protocol}://${host}${path}`, { cache: 'no-store' });
+  return res;
+}
+
+export default async function ChapterPage({ params }: Params) {
+  // Fetch chapter detail (published only; 404 when not found)
+  const detailRes = await fetchJSON(`/api/chapters/${params.id}`);
+  if (detailRes.status === 404) {
     notFound();
   }
+  if (!detailRes.ok) {
+    throw new Error(`Failed to load chapter: ${detailRes.status}`);
+  }
+  const { data: chapter } = (await detailRes.json()) as { data: Chapter };
 
-  const { prev, next } = getPrevNextChapter(chapter.id);
-  const safeHtml = sanitizeHtml(chapter.content);
+  // Fetch all published chapters to compute prev/next (sorted by display_order)
+  const listRes = await fetchJSON(`/api/chapters`);
+  if (!listRes.ok) {
+    throw new Error(`Failed to load chapters list: ${listRes.status}`);
+  }
+  const { data: list } = (await listRes.json()) as { data: Chapter[] };
+
+  const idx = list.findIndex((c) => c.id === chapter.id);
+  const prev = idx > 0 ? list[idx - 1] : undefined;
+  const next = idx >= 0 && idx < list.length - 1 ? list[idx + 1] : undefined;
+
+  const safeHtml = sanitizeHtml(chapter.content || '');
 
   return (
     <main className="section-container">
@@ -26,7 +56,7 @@ export default function ChapterPage({ params }: Params) {
             </Link>
           </p>
           <h1 className="h2-section">{chapter.title}</h1>
-          <p className="text-small text-text-secondary">Order {chapter.displayOrder}</p>
+          <p className="text-small text-text-secondary">Order {chapter.display_order}</p>
         </header>
 
         <article
