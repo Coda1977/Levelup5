@@ -15,7 +15,9 @@
     "format": "prettier --check .",
     "format:write": "prettier --write .",
     "prepare": "husky install",
-    "test": "node -e \"process.exit(0)\""
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -37,6 +39,10 @@
     "@commitlint/config-conventional": "19.2.2",
     "@next/eslint-plugin-next": "14.2.5",
     "@tailwindcss/typography": "^0.5.19",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
     "@types/node": "20.14.12",
     "@types/react": "18.3.5",
     "@typescript-eslint/eslint-plugin": "7.18.0",
@@ -48,6 +54,8 @@
     "eslint-plugin-react-hooks": "4.6.2",
     "globals": "15.9.0",
     "husky": "9.1.5",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
     "lint-staged": "15.2.9",
     "postcss": "8.4.41",
     "prettier": "3.3.3",
