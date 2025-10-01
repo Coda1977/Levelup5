@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/supabase-client';
+import { createServerSupabaseClient, createServiceSupabaseClient } from '@/lib/supabase-client';
 
 // Helper function to check admin access
 async function checkAdminAccess(supabase: any) {
@@ -27,7 +27,7 @@ async function checkAdminAccess(supabase: any) {
 
 // POST /api/admin/categories - Create a new category
 export async function POST(request: Request) {
-  const supabase = createServerSupabaseClient();
+  const supabase = createServerSupabaseClient(request as any);
   const accessCheck = await checkAdminAccess(supabase);
   
   if (!accessCheck.authorized) {
@@ -47,7 +47,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'title is required' }, { status: 400 });
   }
 
-  const { data, error } = await supabase
+  // Use service role client for admin operations to bypass RLS
+  const serviceSupabase = createServiceSupabaseClient();
+  
+  const { data, error } = await serviceSupabase
     .from('categories')
     .insert({
       title,
@@ -57,6 +60,7 @@ export async function POST(request: Request) {
     .single();
 
   if (error) {
+    console.error('Category creation error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
@@ -65,7 +69,7 @@ export async function POST(request: Request) {
 
 // PUT /api/admin/categories - Update an existing category
 export async function PUT(request: Request) {
-  const supabase = createServerSupabaseClient();
+  const supabase = createServerSupabaseClient(request as any);
   const accessCheck = await checkAdminAccess(supabase);
   
   if (!accessCheck.authorized) {
@@ -89,7 +93,10 @@ export async function PUT(request: Request) {
   if (title !== undefined) updateData.title = title;
   if (display_order !== undefined) updateData.display_order = display_order;
 
-  const { data, error } = await supabase
+  // Use service role client for admin operations to bypass RLS
+  const serviceSupabase = createServiceSupabaseClient();
+  
+  const { data, error } = await serviceSupabase
     .from('categories')
     .update(updateData)
     .eq('id', id)
@@ -97,6 +104,7 @@ export async function PUT(request: Request) {
     .single();
 
   if (error) {
+    console.error('Category update error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
@@ -105,7 +113,7 @@ export async function PUT(request: Request) {
 
 // DELETE /api/admin/categories - Delete a category
 export async function DELETE(request: Request) {
-  const supabase = createServerSupabaseClient();
+  const supabase = createServerSupabaseClient(request as any);
   const accessCheck = await checkAdminAccess(supabase);
   
   if (!accessCheck.authorized) {
@@ -119,9 +127,13 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: 'id is required' }, { status: 400 });
   }
 
-  const { error } = await supabase.from('categories').delete().eq('id', id);
+  // Use service role client for admin operations to bypass RLS
+  const serviceSupabase = createServiceSupabaseClient();
+  
+  const { error } = await serviceSupabase.from('categories').delete().eq('id', id);
 
   if (error) {
+    console.error('Category deletion error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

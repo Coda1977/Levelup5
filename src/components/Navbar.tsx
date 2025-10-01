@@ -1,6 +1,16 @@
+'use client';
+
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Navbar() {
+  const { session, supabase } = useAuth();
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/';
+  };
+
   return (
     <header className="bg-white/90 backdrop-blur sticky top-0 z-40 border-b border-black/5">
       <div className="container-max px-5 py-3 flex items-center justify-between">
@@ -15,15 +25,24 @@ export default function Navbar() {
           <Link href="/chat" className="text-sm font-medium hover:underline">
             Chat
           </Link>
-          <Link href="/admin" className="text-sm font-medium hover:underline">
+          <a href="/admin" className="text-sm font-medium hover:underline">
             Admin
-          </Link>
-          <Link
-            href="/auth/login"
-            className="btn-primary"
-          >
-            Sign in
-          </Link>
+          </a>
+          {session ? (
+            <button
+              onClick={handleSignOut}
+              className="btn-secondary"
+            >
+              Sign out
+            </button>
+          ) : (
+            <Link
+              href="/auth/login"
+              className="btn-primary"
+            >
+              Sign in
+            </Link>
+          )}
         </nav>
       </div>
     </header>

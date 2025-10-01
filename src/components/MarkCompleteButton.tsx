@@ -1,13 +1,48 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
 type MarkCompleteButtonProps = {
   chapterId: string;
   initialCompleted: boolean;
 };
 
-export function MarkCompleteButton({
+// Client component that wraps MarkCompleteButton with auth context
+export function MarkCompleteButtonWrapper({
+  chapterId,
+  initialCompleted,
+}: MarkCompleteButtonProps) {
+  const { session, isLoading: authLoading } = useAuth();
+
+  if (authLoading) {
+    return (
+      <div className="px-6 py-3 rounded-xl font-semibold bg-gray-200 text-gray-500">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <button
+        onClick={() => {
+          alert('Please log in to track your progress.');
+          window.location.href = '/auth/login';
+        }}
+        className="px-6 py-3 rounded-xl font-semibold bg-accent-yellow text-text-primary hover:bg-opacity-90 transition-all"
+      >
+        Log in to Track Progress
+      </button>
+    );
+  }
+
+  return (
+    <MarkCompleteButton chapterId={chapterId} initialCompleted={initialCompleted} />
+  );
+}
+
+function MarkCompleteButton({
   chapterId,
   initialCompleted,
 }: MarkCompleteButtonProps) {

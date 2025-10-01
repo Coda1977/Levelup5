@@ -11,13 +11,20 @@ export default function HomePage() {
           </p>
         </header>
 
-        <div className="mt-8">
+        <div className="mt-8 flex gap-4">
           <Link
-            href="/auth/login"
+            href="/auth/signup"
             className="btn-primary inline-flex items-center justify-center"
-            aria-label="Get started with LevelUp"
+            aria-label="Sign up for LevelUp"
           >
             Get Started
+          </Link>
+          <Link
+            href="/auth/login"
+            className="px-8 py-4 bg-white text-text-primary font-semibold rounded-xl border-2 border-accent-yellow hover:bg-gray-50 inline-flex items-center justify-center"
+            aria-label="Sign in to LevelUp"
+          >
+            Sign In
           </Link>
         </div>
 

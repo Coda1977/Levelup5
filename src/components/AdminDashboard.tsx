@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { TipTapEditor } from './TipTapEditor';
 
 type Category = { id: string; title: string; display_order: number };
 type Chapter = {
@@ -35,7 +36,8 @@ export default function AdminDashboard({
     content: '',
     category_id: '',
     display_order: 0,
-    is_published: false,
+    // Root cause fix: default new chapters to published so they appear on Learn
+    is_published: true,
   });
   const [editingChapter, setEditingChapter] = useState<string | null>(null);
 
@@ -120,12 +122,13 @@ export default function AdminDashboard({
 
       const { data } = await res.json();
       setChapters([...chapters, data]);
+      // Keep default as published so content remains visible on Learn by default
       setChapterForm({
         title: '',
         content: '',
         category_id: '',
         display_order: 0,
-        is_published: false,
+        is_published: true,
       });
       alert('Chapter created successfully!');
     } catch (error) {
@@ -147,12 +150,13 @@ export default function AdminDashboard({
       const { data } = await res.json();
       setChapters(chapters.map((c) => (c.id === id ? data : c)));
       setEditingChapter(null);
+      // Maintain published default true after update form reset
       setChapterForm({
         title: '',
         content: '',
         category_id: '',
         display_order: 0,
-        is_published: false,
+        is_published: true,
       });
       alert('Chapter updated successfully!');
     } catch (error) {
@@ -359,15 +363,11 @@ export default function AdminDashboard({
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Content (HTML)</label>
-                <textarea
-                  value={chapterForm.content}
-                  onChange={(e) =>
-                    setChapterForm({ ...chapterForm, content: e.target.value })
-                  }
-                  rows={10}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent-yellow focus:border-transparent font-mono text-sm"
-                  placeholder="<h2>Chapter Title</h2><p>Content here...</p>"
+                <label className="block text-sm font-medium mb-2">Content</label>
+                <TipTapEditor
+                  content={chapterForm.content}
+                  onChange={(content) => setChapterForm({ ...chapterForm, content })}
+                  placeholder="Start writing your chapter content..."
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">

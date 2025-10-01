@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/supabase-client';
+import { createServiceSupabaseClient } from '@/lib/supabase-client';
 
 export async function GET(
   _request: Request,
   context: { params: { id: string } }
 ) {
   const { id } = context.params;
-  const supabase = createServerSupabaseClient();
+  // Use service client to bypass RLS
+  const supabase = createServiceSupabaseClient();
 
   const { data, error } = await supabase
     .from('chapters')
@@ -20,6 +21,7 @@ export async function GET(
     if (String(error.message || '').toLowerCase().includes('no rows')) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
+    console.error('Chapter fetch error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

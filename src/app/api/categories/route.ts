@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/supabase-client';
+import { createServiceSupabaseClient } from '@/lib/supabase-client';
 
 export async function GET() {
-  const supabase = createServerSupabaseClient();
+  // Use service client to bypass RLS and get all categories
+  const supabase = createServiceSupabaseClient();
 
   const { data, error } = await supabase
     .from('categories')
@@ -10,6 +11,7 @@ export async function GET() {
     .order('display_order', { ascending: true });
 
   if (error) {
+    console.error('Categories fetch error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

@@ -31,6 +31,11 @@
     "@anthropic-ai/sdk": "^0.65.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.57.4",
+    "@tiptap/extension-character-count": "^3.6.2",
+    "@tiptap/extension-placeholder": "^3.6.2",
+    "@tiptap/pm": "^3.6.2",
+    "@tiptap/react": "^3.6.2",
+    "@tiptap/starter-kit": "^3.6.2",
     "next": "14.2.5",
     "react": "18.3.1",
     "react-dom": "18.3.1"

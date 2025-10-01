@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 import { sanitizeHtml } from '@/lib/sanitize';
-import { MarkCompleteButton } from '@/components/MarkCompleteButton';
+import { MarkCompleteButtonWrapper } from '@/components/MarkCompleteButton';
 
 type Params = { params: { id: string } };
 
@@ -81,7 +81,7 @@ export default async function ChapterPage({ params }: Params) {
         />
 
         <div className="mt-8 flex justify-center">
-          <MarkCompleteButton chapterId={chapter.id} initialCompleted={isCompleted} />
+          <MarkCompleteButtonWrapper chapterId={chapter.id} initialCompleted={isCompleted} />
         </div>
 
         <nav className="mt-10 flex items-center justify-between gap-4">

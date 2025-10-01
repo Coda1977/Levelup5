@@ -12,7 +12,7 @@ const anthropic = new Anthropic({
 const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514';
 
 export async function POST(request: Request) {
-  const supabase = createServerSupabaseClient();
+  const supabase = createServerSupabaseClient(request as any);
 
   // Check authentication
   const {

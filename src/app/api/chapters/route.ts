@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/supabase-client';
+import { createServiceSupabaseClient } from '@/lib/supabase-client';
 
 export async function GET(request: Request) {
-  const supabase = createServerSupabaseClient();
+  // Use service client to bypass RLS and get all chapters (for admin) or published (for users)
+  const supabase = createServiceSupabaseClient();
   const { searchParams } = new URL(request.url);
   const categoryId = searchParams.get('categoryId');
 
@@ -19,6 +20,7 @@ export async function GET(request: Request) {
   const { data, error } = await query;
 
   if (error) {
+    console.error('Chapters fetch error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 

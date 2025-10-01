@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/supabase-client';
+import { createServerSupabaseClient, createServiceSupabaseClient } from '@/lib/supabase-client';
 
 // POST /api/admin/chapters - Create a new chapter
 export async function POST(request: Request) {
-  const supabase = createServerSupabaseClient();
+  const supabase = createServerSupabaseClient(request as any);
 
   // Check if user is authenticated and is admin
   const {
@@ -42,7 +42,10 @@ export async function POST(request: Request) {
     );
   }
 
-  const { data, error } = await supabase
+  // Use service role client for admin operations to bypass RLS
+  const serviceSupabase = createServiceSupabaseClient();
+  
+  const { data, error } = await serviceSupabase
     .from('chapters')
     .insert({
       title,
@@ -55,6 +58,7 @@ export async function POST(request: Request) {
     .single();
 
   if (error) {
+    console.error('Chapter creation error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
@@ -63,7 +67,7 @@ export async function POST(request: Request) {
 
 // PUT /api/admin/chapters - Update an existing chapter
 export async function PUT(request: Request) {
-  const supabase = createServerSupabaseClient();
+  const supabase = createServerSupabaseClient(request as any);
 
   // Check if user is authenticated and is admin
   const {
@@ -106,7 +110,10 @@ export async function PUT(request: Request) {
   if (display_order !== undefined) updateData.display_order = display_order;
   if (is_published !== undefined) updateData.is_published = is_published;
 
-  const { data, error } = await supabase
+  // Use service role client for admin operations to bypass RLS
+  const serviceSupabase = createServiceSupabaseClient();
+  
+  const { data, error } = await serviceSupabase
     .from('chapters')
     .update(updateData)
     .eq('id', id)
@@ -114,6 +121,7 @@ export async function PUT(request: Request) {
     .single();
 
   if (error) {
+    console.error('Chapter update error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
@@ -122,7 +130,7 @@ export async function PUT(request: Request) {
 
 // DELETE /api/admin/chapters - Delete a chapter
 export async function DELETE(request: Request) {
-  const supabase = createServerSupabaseClient();
+  const supabase = createServerSupabaseClient(request as any);
 
   // Check if user is authenticated and is admin
   const {
@@ -152,9 +160,13 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: 'id is required' }, { status: 400 });
   }
 
-  const { error } = await supabase.from('chapters').delete().eq('id', id);
+  // Use service role client for admin operations to bypass RLS
+  const serviceSupabase = createServiceSupabaseClient();
+  
+  const { error } = await serviceSupabase.from('chapters').delete().eq('id', id);
 
   if (error) {
+    console.error('Chapter deletion error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
