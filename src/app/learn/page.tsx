@@ -51,13 +51,15 @@ export default async function LearnPage() {
   } = await ssr.auth.getUser();
 
   let includeDrafts = false;
+  let userName = 'there';
   if (user) {
     const { data: profile } = await supabase
       .from('user_profiles')
-      .select('role')
+      .select('role, full_name')
       .eq('id', user.id)
       .single();
     includeDrafts = profile?.role === 'admin';
+    userName = profile?.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'there';
   }
 
   // Load chapters; admins see all, others only published
@@ -85,7 +87,7 @@ export default async function LearnPage() {
     if (arr) arr.push(ch as Chapter);
   }
 
-  // Fetch user's progress for all chapters (optional)
+  // Fetch user's progress for all chapters
   const completedChapterIds = new Set<string>();
   if (user) {
     try {
@@ -112,75 +114,129 @@ export default async function LearnPage() {
     ? Math.round((completedCount / totalPublishedChapters) * 100)
     : 0;
 
+  // Find the next chapter to continue (first incomplete chapter)
+  let continueChapter: Chapter | null = null;
+  if (user && publishedChapters) {
+    for (const ch of publishedChapters) {
+      if (!completedChapterIds.has(ch.id)) {
+        continueChapter = ch;
+        break;
+      }
+    }
+  }
+
   return (
     <main className="section-container">
       <div className="container-max">
-        <header className="mb-10">
-          <h1 className="h1-hero fade-in">Learn</h1>
-          <p className="text-body max-w-2xl">Explore published chapters grouped by category.</p>
+        {/* Header with greeting */}
+        <header className="mb-10 fade-in">
+          <h1 className="h1-page mb-4">
+            Welcome back, {userName} 👋
+          </h1>
           
-          {/* Overall Progress Bar */}
+          {/* Progress Bar */}
           {user && totalPublishedChapters > 0 && (
-            <div className="mt-6 max-w-2xl">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">Your Progress</span>
-                <span className="text-sm font-semibold text-gray-900">
-                  {completedCount}/{totalPublishedChapters} chapters ({progressPercentage}%)
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+            <div className="max-w-2xl">
+              <div className="progress-bar">
                 <div
-                  className="bg-accent-green h-full rounded-full transition-all duration-500"
+                  className="progress-fill"
                   style={{ width: `${progressPercentage}%` }}
                 />
               </div>
+              <p className="text-tiny mt-2">
+                {completedCount}/{totalPublishedChapters} chapters complete ({progressPercentage}%)
+              </p>
             </div>
           )}
         </header>
 
         {!hasAnyPublished ? (
+          /* Empty State */
           <div className="mt-16 text-center py-20">
-            <div className="text-6xl font-black text-accent-yellow mb-4">📚</div>
-            <h2 className="text-2xl font-bold mb-4">No content yet</h2>
-            <p className="text-body">When chapters are published, they will appear here.</p>
+            <div className="text-6xl mb-6">📚</div>
+            <h2 className="h2-section mb-4">No content yet</h2>
+            <p className="text-body mb-8">
+              Content is coming soon! Check back tomorrow.
+            </p>
+            <Link href="/chat" className="btn-primary">
+              Try our AI coach while you wait →
+            </Link>
           </div>
         ) : (
-          <div className="mt-10 space-y-16">
-            {(categories || []).map((category) => {
-              const items = chaptersByCategory.get(category.id) || [];
-              if (!items.length) return null;
-              return (
-                <section key={category.id}>
-                  <h2 className="h2-section mb-6">{category.title}</h2>
-                  <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {items.map((ch) => {
-                      const isCompleted = completedChapterIds.has(ch.id);
-                      return (
-                        <li key={ch.id} className="card-feature relative">
-                          {isCompleted && (
-                            <div className="absolute top-4 right-4 bg-accent-green text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">
-                              ✓
+          <>
+            {/* Continue Learning Section */}
+            {continueChapter && (
+              <section className="mb-16 fade-in">
+                <h2 className="h2-section mb-6">Continue Learning</h2>
+                <div className="card-continue">
+                  <div className="flex items-start gap-4">
+                    <div className="text-4xl">📖</div>
+                    <div className="flex-1">
+                      <h3 className="h3-card mb-2">{continueChapter.title}</h3>
+                      <p className="text-small text-text-secondary mb-4">
+                        5 min read • Chapter {continueChapter.display_order}
+                      </p>
+                      <Link href={`/learn/${continueChapter.id}`} className="btn-primary">
+                        Continue →
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* Category Sections */}
+            <div className="space-y-16">
+              {(categories || []).map((category) => {
+                const items = chaptersByCategory.get(category.id) || [];
+                if (!items.length) return null;
+                
+                const categoryCompleted = items.filter(ch => completedChapterIds.has(ch.id)).length;
+                const categoryTotal = items.length;
+                
+                return (
+                  <section key={category.id}>
+                    <div className="flex items-center justify-between mb-6">
+                      <h2 className="h2-section">{category.title}</h2>
+                      <span className="text-small text-text-secondary">
+                        {categoryCompleted}/{categoryTotal}
+                      </span>
+                    </div>
+                    <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                      {items.map((ch) => {
+                        const isCompleted = completedChapterIds.has(ch.id);
+                        return (
+                          <li key={ch.id} className="card-feature relative group">
+                            {/* Completion Badge */}
+                            {isCompleted && (
+                              <div className="badge-complete absolute top-4 right-4">
+                                ✓
+                              </div>
+                            )}
+                            
+                            <div className="flex flex-col h-full">
+                              <h3 className="h3-card mb-2">{ch.title}</h3>
+                              <p className="text-tiny mb-6">
+                                5 min • Ch {ch.display_order}
+                              </p>
+                              <div className="mt-auto">
+                                <Link 
+                                  href={`/learn/${ch.id}`} 
+                                  className="btn-primary w-full text-center"
+                                >
+                                  {isCompleted ? 'Review' : 'Start'}
+                                </Link>
+                              </div>
                             </div>
-                          )}
-                          <div className="flex flex-col h-full">
-                            <h3 className="text-xl font-semibold mb-2">{ch.title}</h3>
-                            <p className="text-small text-text-secondary mb-6">
-                              {isCompleted ? 'Completed' : 'Published'} • Order {ch.display_order}
-                            </p>
-                            <div className="mt-auto">
-                              <Link href={`/learn/${ch.id}`} className="inline-block btn-primary">
-                                {isCompleted ? 'Review chapter' : 'Read chapter'}
-                              </Link>
-                            </div>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </section>
-              );
-            })}
-          </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </section>
+                );
+              })}
+            </div>
+          </>
         )}
       </div>
     </main>

@@ -21,6 +21,7 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showSidebar, setShowSidebar] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [conversationsKey, setConversationsKey] = useState(0);
 
@@ -43,6 +44,7 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
 
       setMessages(msgs || []);
       setConversationId(convId);
+      setShowSidebar(false);
     } catch (err) {
       console.error('Failed to load conversation:', err);
       setError('Failed to load conversation');
@@ -57,6 +59,7 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
       setMessages([]);
       setConversationId(null);
       setError(null);
+      setShowSidebar(false);
     }
   };
 
@@ -153,70 +156,80 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Conversation Sidebar */}
-      <ConversationSidebar
-        currentConversationId={conversationId}
-        onSelectConversation={handleSelectConversation}
-        key={conversationsKey}
-      />
+      {/* Conversation Sidebar - Hidden by default, shown via dropdown */}
+      {showSidebar && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setShowSidebar(false)}
+          />
+          {/* Sidebar */}
+          <div className="fixed inset-y-0 left-0 z-50 w-80">
+            <ConversationSidebar
+              currentConversationId={conversationId}
+              onSelectConversation={handleSelectConversation}
+              key={conversationsKey}
+            />
+          </div>
+        </>
+      )}
 
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="text-3xl">🤖</div>
+            <div>
+              <h1 className="h3-card">Your AI Coach</h1>
+              <p className="text-tiny">Ready to help</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowSidebar(!showSidebar)}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            aria-label="Toggle conversations"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+
         {/* Chat Messages */}
         <div className="flex-1 overflow-y-auto px-4 py-6">
           <div className="max-w-4xl mx-auto space-y-6">
             {messages.length === 0 ? (
-              <div className="text-center py-20">
-                <div className="text-6xl mb-4">🤖</div>
-                <h3 className="text-xl font-semibold mb-2">Start a Conversation</h3>
-                <p className="text-text-secondary mb-8">
+              <div className="text-center py-20 fade-in">
+                <div className="text-6xl mb-6">💬</div>
+                <h2 className="h2-section mb-4">Start a Conversation</h2>
+                <p className="text-body mb-8">
                   Ask me anything about management, leadership, or team dynamics.
                 </p>
-                <div className="grid gap-4 max-w-2xl mx-auto">
-                  <button
-                    onClick={() =>
-                      setInput('How do I give constructive feedback to my team?')
-                    }
-                    className="p-4 text-left bg-white rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
-                  >
-                    <p className="font-medium">💬 Giving Feedback</p>
-                    <p className="text-sm text-text-secondary">
-                      How do I give constructive feedback to my team?
-                    </p>
-                  </button>
-                  <button
-                    onClick={() =>
-                      setInput('What are the key principles of effective delegation?')
-                    }
-                    className="p-4 text-left bg-white rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
-                  >
-                    <p className="font-medium">🎯 Delegation</p>
-                    <p className="text-sm text-text-secondary">
-                      What are the key principles of effective delegation?
-                    </p>
-                  </button>
-                  <button
-                    onClick={() =>
-                      setInput('How can I build trust with my team?')
-                    }
-                    className="p-4 text-left bg-white rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
-                  >
-                    <p className="font-medium">🤝 Building Trust</p>
-                    <p className="text-sm text-text-secondary">
-                      How can I build trust with my team?
-                    </p>
-                  </button>
-                </div>
               </div>
             ) : (
               <>
                 {messages.map((msg) => (
-                  <MarkdownMessage
+                  <div
                     key={msg.id}
-                    content={msg.content}
-                    role={msg.role}
-                  />
+                    className={msg.role === 'user' ? 'message-user ml-auto' : 'message-ai'}
+                  >
+                    <MarkdownMessage
+                      content={msg.content}
+                      role={msg.role}
+                    />
+                  </div>
                 ))}
+                {isLoading && messages[messages.length - 1]?.role === 'assistant' && messages[messages.length - 1]?.content === '' && (
+                  <div className="message-ai">
+                    <div className="typing-indicator">
+                      <div className="typing-dot"></div>
+                      <div className="typing-dot"></div>
+                      <div className="typing-dot"></div>
+                    </div>
+                  </div>
+                )}
                 <div ref={messagesEndRef} />
               </>
             )}
@@ -239,16 +252,16 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask your management coach..."
+              placeholder="Type your message..."
               disabled={isLoading}
-              className="flex-1 px-6 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-accent-yellow focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className="flex-1 px-6 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-accent-yellow focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-body"
             />
             <button
               type="submit"
               disabled={isLoading || !input.trim()}
-              className="px-8 py-4 bg-accent-yellow text-text-primary font-semibold rounded-xl hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="btn-primary px-8 py-4"
             >
-              {isLoading ? 'Thinking...' : 'Send'}
+              {isLoading ? 'Sending...' : 'Send →'}
             </button>
           </form>
         </div>
