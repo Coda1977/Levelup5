@@ -2,43 +2,59 @@ import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <main className="section-container">
+    <main className="section-container" style={{ background: 'var(--gradient-hero)' }}>
       <div className="container-max">
-        <header className="mb-10">
-          <h1 className="h1-hero fade-in">LevelUp</h1>
-          <p className="text-body max-w-2xl">
-            Mobile-first management development. Bite-sized lessons. Practical coaching. Ship better leadership habits.
+        {/* Hero Section */}
+        <header className="text-center mb-16 fade-in">
+          <h1 className="h1-hero mb-6">
+            Master Management
+            <br />
+            in 5 Minutes a Day
+          </h1>
+          <p className="text-body max-w-2xl mx-auto mb-8">
+            Bite-sized lessons. AI coaching. Real results.
           </p>
-        </header>
-
-        <div className="mt-8 flex gap-4">
+          
+          {/* Primary CTA */}
           <Link
             href="/auth/signup"
-            className="btn-primary inline-flex items-center justify-center"
-            aria-label="Sign up for LevelUp"
+            className="btn-primary text-lg px-12 py-5 mb-3"
+            aria-label="Start learning for free"
           >
-            Get Started
+            Start Learning Free →
           </Link>
-          <Link
-            href="/auth/login"
-            className="px-8 py-4 bg-white text-text-primary font-semibold rounded-xl border-2 border-accent-yellow hover:bg-gray-50 inline-flex items-center justify-center"
-            aria-label="Sign in to LevelUp"
-          >
-            Sign In
-          </Link>
-        </div>
+          <p className="text-tiny text-center">No credit card required</p>
+        </header>
 
-        <section className="mt-16 grid gap-6 sm:grid-cols-2">
-          <div className="card-feature">
-            <div className="text-6xl font-black text-accent-yellow mb-4">01</div>
-            <h3 className="text-2xl font-bold mb-4">Learn fast</h3>
-            <p className="text-body">Five-minute reads with embedded media. Designed for busy managers on the go.</p>
+        {/* Stats Section */}
+        <section className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto mb-16">
+          <div className="card-feature text-center">
+            <div className="text-5xl mb-3">📚</div>
+            <div className="text-3xl font-bold mb-2">50+</div>
+            <p className="text-small text-text-secondary">Chapters</p>
           </div>
-          <div className="card-feature">
-            <div className="text-6xl font-black text-accent-yellow mb-4">02</div>
-            <h3 className="text-2xl font-bold mb-4">Track progress</h3>
-            <p className="text-body">Simple checkmarks and an overall progress bar across all chapters.</p>
+          <div className="card-feature text-center">
+            <div className="text-5xl mb-3">🤖</div>
+            <div className="text-3xl font-bold mb-2">AI</div>
+            <p className="text-small text-text-secondary">Coach</p>
           </div>
+          <div className="card-feature text-center">
+            <div className="text-5xl mb-3">📈</div>
+            <div className="text-3xl font-bold mb-2">Track</div>
+            <p className="text-small text-text-secondary">Progress</p>
+          </div>
+        </section>
+
+        {/* Testimonial */}
+        <section className="max-w-2xl mx-auto text-center">
+          <blockquote className="bg-white/50 backdrop-blur-sm p-8 rounded-2xl">
+            <p className="text-body text-text-primary mb-4 italic">
+              "Promoted to Senior Manager in 3 months"
+            </p>
+            <footer className="text-small font-semibold">
+              — Sarah K., Tech Lead
+            </footer>
+          </blockquote>
         </section>
       </div>
     </main>
