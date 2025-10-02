@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { headers } from 'next/headers';
+import { headers, cookies } from 'next/headers';
 import { sanitizeHtml } from '@/lib/sanitize';
 import { MarkCompleteButtonWrapper } from '@/components/MarkCompleteButton';
 import AudioPlayer from '@/components/AudioPlayer';
+import { createServiceSupabaseClient } from '@/lib/supabase-client';
+import { createServerClient } from '@supabase/ssr';
 
 type Params = { params: { id: string } };
 
@@ -50,11 +52,37 @@ export default async function ChapterPage({ params }: Params) {
   const { data: list } = (await listRes.json()) as { data: Chapter[] };
 
   // Fetch user's progress for this chapter
-  const progressRes = await fetchJSON(`/api/progress?chapterId=${params.id}`);
   let isCompleted = false;
-  if (progressRes.ok) {
-    const { data: progressData } = (await progressRes.json()) as { data: Progress[] };
-    isCompleted = progressData && progressData.length > 0;
+  
+  // Get authenticated user to check progress
+  const ssr = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        async get(name: string) {
+          return (await cookies()).get(name)?.value;
+        },
+        set() {},
+        remove() {},
+      },
+    }
+  );
+  
+  const {
+    data: { user: currentUser },
+  } = await ssr.auth.getUser();
+
+  if (currentUser) {
+    const svc = createServiceSupabaseClient();
+    const { data: progressData } = await svc
+      .from('user_progress')
+      .select('chapter_id')
+      .eq('user_id', currentUser.id)
+      .eq('chapter_id', params.id)
+      .single();
+    
+    isCompleted = !!progressData;
   }
 
   const idx = list.findIndex((c) => c.id === chapter.id);

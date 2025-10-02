@@ -87,17 +87,19 @@ export default async function LearnPage() {
 
   // Fetch user's progress for all chapters (optional)
   const completedChapterIds = new Set<string>();
-  try {
-    const h = headers();
-    const host = h.get('host')!;
-    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
-    const progressRes = await fetch(`${protocol}://${host}/api/progress`, { cache: 'no-store' });
-    if (progressRes.ok) {
-      const { data: progressData } = (await progressRes.json()) as { data: Progress[] };
-      (progressData || []).forEach((p) => completedChapterIds.add(p.chapter_id));
+  if (user) {
+    try {
+      const { data: progressData, error: progressError } = await supabase
+        .from('user_progress')
+        .select('chapter_id, completed_at')
+        .eq('user_id', user.id);
+      
+      if (!progressError && progressData) {
+        progressData.forEach((p) => completedChapterIds.add(p.chapter_id));
+      }
+    } catch {
+      // If progress fetch fails, continue without progress data
     }
-  } catch {
-    // If progress fetch fails (e.g., not authenticated), continue without progress data
   }
 
   const hasAnyPublished = (categories || []).some(
