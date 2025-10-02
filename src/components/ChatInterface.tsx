@@ -63,11 +63,11 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent, messageText?: string) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    const userMessage = messageText || input.trim();
+    if (!userMessage || isLoading) return;
 
-    const userMessage = input.trim();
     setInput('');
     setError(null);
 
@@ -154,8 +154,15 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
     }
   };
 
+  const handleQuickReply = (text: string) => {
+    setInput(text);
+    // Auto-submit the quick reply
+    const fakeEvent = { preventDefault: () => {} } as React.FormEvent;
+    handleSubmit(fakeEvent, text);
+  };
+
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Conversation Sidebar - Hidden by default, shown via dropdown */}
       {showSidebar && (
         <>
@@ -164,8 +171,8 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
             className="fixed inset-0 bg-black/50 z-40"
             onClick={() => setShowSidebar(false)}
           />
-          {/* Sidebar */}
-          <div className="fixed inset-y-0 left-0 z-50 w-80">
+          {/* Sidebar - Opens from RIGHT side */}
+          <div className="fixed inset-y-0 right-0 z-50 w-80">
             <ConversationSidebar
               currentConversationId={conversationId}
               onSelectConversation={handleSelectConversation}
@@ -175,12 +182,12 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
         </>
       )}
 
-      {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
+      {/* Main Chat Area - Single scrollable container */}
+      <div className="flex-1 flex flex-col min-h-0">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+        <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="text-3xl">🤖</div>
+            <div className="text-3xl">✨</div>
             <div>
               <h1 className="h3-card">Your AI Coach</h1>
               <p className="text-tiny">Ready to help</p>
@@ -197,9 +204,9 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
           </button>
         </div>
 
-        {/* Chat Messages */}
+        {/* Messages Container - Single scroller */}
         <div className="flex-1 overflow-y-auto px-4 py-6">
-          <div className="max-w-4xl mx-auto space-y-6">
+          <div className="max-w-4xl mx-auto space-y-6 pb-4">
             {messages.length === 0 ? (
               <div className="text-center py-20 fade-in">
                 <div className="text-6xl mb-6">💬</div>
@@ -211,22 +218,21 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
             ) : (
               <>
                 {messages.map((msg) => (
-                  <div
+                  <MarkdownMessage
                     key={msg.id}
-                    className={msg.role === 'user' ? 'message-user ml-auto' : 'message-ai'}
-                  >
-                    <MarkdownMessage
-                      content={msg.content}
-                      role={msg.role}
-                    />
-                  </div>
+                    content={msg.content}
+                    role={msg.role}
+                    onQuickReply={msg.role === 'assistant' ? handleQuickReply : undefined}
+                  />
                 ))}
                 {isLoading && messages[messages.length - 1]?.role === 'assistant' && messages[messages.length - 1]?.content === '' && (
-                  <div className="message-ai">
-                    <div className="typing-indicator">
-                      <div className="typing-dot"></div>
-                      <div className="typing-dot"></div>
-                      <div className="typing-dot"></div>
+                  <div className="flex justify-start">
+                    <div className="message-ai">
+                      <div className="typing-indicator">
+                        <div className="typing-dot"></div>
+                        <div className="typing-dot"></div>
+                        <div className="typing-dot"></div>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -238,7 +244,7 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
 
         {/* Error Message */}
         {error && (
-          <div className="px-4 pb-2">
+          <div className="px-4 pb-2 flex-shrink-0">
             <div className="max-w-4xl mx-auto p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
               {error}
             </div>
@@ -246,8 +252,8 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
         )}
 
         {/* Input Form */}
-        <div className="border-t border-gray-200 bg-white px-4 py-4">
-          <form onSubmit={handleSubmit} className="max-w-4xl mx-auto flex gap-4">
+        <div className="border-t border-gray-200 bg-white px-4 py-4 flex-shrink-0">
+          <form onSubmit={(e) => handleSubmit(e)} className="max-w-4xl mx-auto flex gap-4">
             <input
               type="text"
               value={input}
