@@ -11,7 +11,7 @@ export async function GET(
 
   const { data, error } = await supabase
     .from('chapters')
-    .select('id, category_id, title, content, is_published, display_order')
+    .select('id, category_id, title, content, is_published, display_order, audio_url')
     .eq('id', id)
     .eq('is_published', true)
     .single();

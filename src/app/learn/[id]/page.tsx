@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 import { sanitizeHtml } from '@/lib/sanitize';
 import { MarkCompleteButtonWrapper } from '@/components/MarkCompleteButton';
+import AudioPlayer from '@/components/AudioPlayer';
 
 type Params = { params: { id: string } };
 
@@ -13,6 +14,7 @@ type Chapter = {
   content: string;
   is_published: boolean;
   display_order: number;
+  audio_url?: string;
 };
 
 type Progress = {
@@ -73,6 +75,11 @@ export default async function ChapterPage({ params }: Params) {
           <h1 className="h2-section">{chapter.title}</h1>
           <p className="text-small text-text-secondary">Order {chapter.display_order}</p>
         </header>
+
+        {/* Audio Player - appears if audio is available */}
+        {chapter.audio_url && (
+          <AudioPlayer audioUrl={chapter.audio_url} title={chapter.title} />
+        )}
 
         <article
           className="prose max-w-none bg-white rounded-2xl p-6 sm:p-8 shadow-sm"

@@ -11,6 +11,7 @@ type Chapter = {
   content: string;
   is_published: boolean;
   display_order: number;
+  audio_url?: string;
 };
 
 type AdminDashboardProps = {
@@ -200,6 +201,36 @@ export default function AdminDashboard({
       display_order: chapter.display_order,
       is_published: chapter.is_published,
     });
+  };
+
+  const handleGenerateAudio = async (chapterId: string) => {
+    if (!confirm('Generate audio for this chapter? This will use OpenAI API credits.')) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/admin/chapters/${chapterId}/generate-audio`, {
+        method: 'POST',
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || 'Failed to generate audio');
+      }
+
+      const result = await res.json();
+      alert(`Audio generated successfully! (${result.chunks} chunk(s), ${result.textLength} characters)`);
+      
+      // Refresh chapters to show audio URL
+      const refreshRes = await fetch('/api/admin/chapters');
+      if (refreshRes.ok) {
+        const { data } = await refreshRes.json();
+        setChapters(data);
+      }
+    } catch (error: any) {
+      alert(`Error generating audio: ${error.message}`);
+      console.error(error);
+    }
   };
 
   return (
@@ -459,6 +490,16 @@ export default function AdminDashboard({
                       </p>
                     </div>
                     <div className="flex gap-2">
+                      <button
+                        onClick={() => handleGenerateAudio(chapter.id)}
+                        className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-1"
+                        title="Generate TTS audio"
+                      >
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
+                        </svg>
+                        {chapter.audio_url ? 'Regenerate' : 'Generate'} Audio
+                      </button>
                       <button
                         onClick={() => startEditChapter(chapter)}
                         className="px-4 py-2 text-sm bg-accent-yellow rounded-lg hover:bg-opacity-90"
