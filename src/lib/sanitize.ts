@@ -22,13 +22,78 @@ function stripEventHandlers(html: string): string {
 }
 
 function stripStyles(html: string): string {
-  // Remove style="..." attributes
-  return html.replace(/\sstyle\s*=\s*"[^"]*"/gi, "").replace(/\sstyle\s*=\s*'[^']*'/gi, "");
+  // Remove style="..." attributes except for iframe-wrapper divs
+  return html.replace(/\sstyle\s*=\s*"[^"]*"/gi, (match, offset, string) => {
+    // Check if this is within an iframe-wrapper div
+    const before = string.substring(Math.max(0, offset - 100), offset);
+    if (before.includes('class="iframe-wrapper"')) {
+      return match; // Keep style for iframe-wrapper
+    }
+    return '';
+  }).replace(/\sstyle\s*=\s*'[^']*'/gi, '');
 }
 
 function sanitizeIframes(html: string): string {
-  // Replace iframes with a sanitized version if src starts with an allowed prefix
-  return html.replace(/<iframe([^>]*)>([\s\S]*?)<\/iframe>/gi, (match, attrs) => {
+  // Handle old video-embed and spotify-embed divs (legacy format)
+  html = html.replace(/<div class="(?:video-embed|spotify-embed)"[^>]*>[\s\S]*?<iframe([^>]*)>[\s\S]*?<\/iframe>[\s\S]*?<\/div>/gi, (match, iframeAttrs) => {
+    // Extract src from iframe
+    const srcMatch = String(iframeAttrs).match(/\ssrc\s*=\s*"(.*?)"/i) || String(iframeAttrs).match(/\ssrc\s*=\s*'(.*?)'/i);
+    if (!srcMatch) {
+      return ""; // drop if no src
+    }
+    const src = srcMatch[1];
+
+    // Allow only known safe providers
+    const allowed = ALLOWED_IFRAME_PREFIXES.some((prefix) => src.startsWith(prefix));
+    if (!allowed) {
+      return ""; // drop unknown embeds
+    }
+
+    // Determine if it's YouTube or Spotify
+    const isYouTube = src.includes('youtube.com');
+    const isSpotify = src.includes('spotify.com');
+
+    if (isYouTube) {
+      return `<div class="iframe-wrapper"><iframe src="${src}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+    } else if (isSpotify) {
+      return `<div class="iframe-wrapper"><iframe src="${src}" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div>`;
+    }
+
+    return "";
+  });
+
+  // Handle iframe-wrapper divs from TipTap
+  html = html.replace(/<div class="iframe-wrapper">[\s\S]*?<iframe([^>]*)>[\s\S]*?<\/iframe>[\s\S]*?<\/div>/gi, (match, iframeAttrs) => {
+    // Extract src from iframe
+    const srcMatch = String(iframeAttrs).match(/\ssrc\s*=\s*"(.*?)"/i) || String(iframeAttrs).match(/\ssrc\s*=\s*'(.*?)'/i);
+    if (!srcMatch) {
+      return ""; // drop if no src
+    }
+    const src = srcMatch[1];
+
+    // Allow only known safe providers
+    const allowed = ALLOWED_IFRAME_PREFIXES.some((prefix) => src.startsWith(prefix));
+    if (!allowed) {
+      return ""; // drop unknown embeds
+    }
+
+    // Determine if it's YouTube or Spotify
+    const isYouTube = src.includes('youtube.com');
+    const isSpotify = src.includes('spotify.com');
+
+    if (isYouTube) {
+      // YouTube: responsive 16:9 container
+      return `<div class="iframe-wrapper"><iframe src="${src}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+    } else if (isSpotify) {
+      // Spotify: fixed height with border radius
+      return `<div class="iframe-wrapper"><iframe src="${src}" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div>`;
+    }
+
+    return "";
+  });
+
+  // Also handle standalone iframes (legacy support)
+  html = html.replace(/<iframe([^>]*)>[\s\S]*?<\/iframe>/gi, (match, attrs) => {
     // Extract src
     const srcMatch = String(attrs).match(/\ssrc\s*=\s*"(.*?)"/i) || String(attrs).match(/\ssrc\s*=\s*'(.*?)'/i);
     if (!srcMatch) {
@@ -42,16 +107,20 @@ function sanitizeIframes(html: string): string {
       return ""; // drop unknown embeds
     }
 
-    // Whitelist a small set of attributes
-    const allowMatch = String(attrs).match(/\sallow\s*=\s*"(.*?)"/i) || String(attrs).match(/\sallow\s*=\s*'(.*?)'/i);
-    const referrerMatch = String(attrs).match(/\sreferrerpolicy\s*=\s*"(.*?)"/i) || String(attrs).match(/\sreferrerpolicy\s*=\s*'(.*?)'/i);
+    // Determine if it's YouTube or Spotify
+    const isYouTube = src.includes('youtube.com');
+    const isSpotify = src.includes('spotify.com');
 
-    const allow = allowMatch ? allowMatch[1] : "autoplay; encrypted-media; picture-in-picture";
-    const referrer = referrerMatch ? referrerMatch[1] : "no-referrer";
+    if (isYouTube) {
+      return `<div class="iframe-wrapper"><iframe src="${src}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+    } else if (isSpotify) {
+      return `<div class="iframe-wrapper"><iframe src="${src}" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div>`;
+    }
 
-    // Basic safe defaults, responsive sizing deferred to container CSS
-    return `<iframe src="${src}" loading="lazy" allow="${allow}" referrerpolicy="${referrer}" frameborder="0"></iframe>`;
+    return "";
   });
+
+  return html;
 }
 
 function stripDangerousProtocols(html: string): string {
