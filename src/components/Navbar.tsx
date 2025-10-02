@@ -40,12 +40,17 @@ export default function Navbar() {
         </Link>
 
         <nav className="flex items-center gap-4">
-          <Link href="/learn" className="text-sm font-medium hover:underline">
-            Learn
-          </Link>
-          <Link href="/chat" className="text-sm font-medium hover:underline">
-            Chat
-          </Link>
+          {/* Only show Learn and Chat links if user is authenticated */}
+          {session && (
+            <>
+              <Link href="/learn" className="text-sm font-medium hover:underline">
+                Learn
+              </Link>
+              <Link href="/chat" className="text-sm font-medium hover:underline">
+                Chat
+              </Link>
+            </>
+          )}
           {isAdmin && (
             <>
               <Link href="/editor" className="text-sm font-medium hover:underline">
