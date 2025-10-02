@@ -104,12 +104,36 @@ export default async function LearnPage() {
     (c) => (chaptersByCategory.get(c.id) || []).length > 0
   );
 
+  const totalPublishedChapters = publishedChapters?.length || 0;
+  const completedCount = completedChapterIds.size;
+  const progressPercentage = totalPublishedChapters > 0
+    ? Math.round((completedCount / totalPublishedChapters) * 100)
+    : 0;
+
   return (
     <main className="section-container">
       <div className="container-max">
         <header className="mb-10">
           <h1 className="h1-hero fade-in">Learn</h1>
           <p className="text-body max-w-2xl">Explore published chapters grouped by category.</p>
+          
+          {/* Overall Progress Bar */}
+          {user && totalPublishedChapters > 0 && (
+            <div className="mt-6 max-w-2xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-700">Your Progress</span>
+                <span className="text-sm font-semibold text-gray-900">
+                  {completedCount}/{totalPublishedChapters} chapters ({progressPercentage}%)
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div
+                  className="bg-accent-green h-full rounded-full transition-all duration-500"
+                  style={{ width: `${progressPercentage}%` }}
+                />
+              </div>
+            </div>
+          )}
         </header>
 
         {!hasAnyPublished ? (

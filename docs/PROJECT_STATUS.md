@@ -15,9 +15,9 @@
 | **Weeks 2-3: Content Management** | ✅ Complete | 100% | Excellent |
 | **Week 4: AI Chat Integration** | ✅ Complete | 100% | Excellent |
 | **Week 5: TTS Integration** | ✅ Complete | 100% | Excellent |
+| **Week 6: User Dashboard & Admin Restructure** | ✅ Complete | 100% | Excellent |
 | **Automated Testing** | ✅ Complete | 100% | Excellent |
 | **Manual Testing** | ⏳ Ready | 0% | Pending |
-| **User Dashboard (Admin)** | ⏳ Planned | 0% | Future |
 | **Integration Testing** | ⏳ Planned | 0% | Future |
 | **Production Deployment** | ⏳ Planned | 0% | Future |
 
@@ -59,9 +59,11 @@
   - [`/learn`](../src/app/learn/page.tsx) - Category-organized chapter listing
   - [`/learn/[id]`](../src/app/learn/[id]/page.tsx) - Chapter reader with navigation
 
-- ✅ **Admin Panel:**
-  - [`/admin`](../src/app/admin/page.tsx) - Role-based access control
-  - [`AdminDashboard`](../src/components/AdminDashboard.tsx) - Full CRUD interface
+- ✅ **Admin Panels:**
+  - [`/editor`](../src/app/editor/page.tsx) - Content management (categories, chapters, TTS)
+  - [`/users`](../src/app/users/page.tsx) - User analytics and management
+  - [`AdminDashboard`](../src/components/AdminDashboard.tsx) - Content CRUD interface
+  - [`UserDashboard`](../src/components/UserDashboard.tsx) - User management interface
 
 - ✅ **Components:**
   - [`MarkCompleteButton`](../src/components/MarkCompleteButton.tsx) - Progress tracking UI
@@ -96,6 +98,15 @@
   - Mobile-optimized sticky player
   - HTML stripping and text preparation
   - Automatic text chunking for long chapters
+
+- ✅ **User Dashboard (Admin-Only):**
+  - User analytics with statistics cards
+  - User list with progress tracking
+  - Search and filter functionality
+  - Detailed user progress view
+  - User deletion with confirmation
+  - Overall progress bar on learn page
+  - Admin route restructure (/editor and /users)
 
 - ✅ **Security:**
   - RLS policies on all tables
@@ -238,8 +249,7 @@
 5. **Access Control** - Working correctly
 
 #### ⏳ **Needs Completion:**
-1. **User Dashboard** - Admin interface for user management (1-2 days)
-2. **Manual Testing** - 11+ tests including TTS (2-3 hours)
+1. **Manual Testing** - 11+ tests including TTS and user dashboard (2-3 hours)
 3. **API Route Integration Tests** - Playwright/Cypress setup
 4. **Performance Testing** - Load testing with 200+ users
 5. **Security Audit** - Malicious payload testing
@@ -366,11 +376,11 @@ npx playwright install
 ## 📊 Current Metrics
 
 ### **Development Metrics**
-- **Total Files:** 63+
-- **Lines of Code:** ~5000
-- **Components:** 7 (chat + audio player)
-- **API Routes:** 12 (chat, conversations, TTS)
-- **Pages:** 7
+- **Total Files:** 67+
+- **Lines of Code:** ~5500
+- **Components:** 8 (chat, audio player, user dashboard)
+- **API Routes:** 14 (chat, conversations, TTS, users)
+- **Pages:** 8 (/editor, /users)
 - **Database Tables:** 6 (conversations, messages, chapters with audio)
 - **Migrations:** 5 (chat schema + TTS audio_url)
 - **TipTap Extensions:** 1 (iframe support)
