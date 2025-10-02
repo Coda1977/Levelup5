@@ -3,7 +3,7 @@ import { createServerSupabaseClient, createServiceSupabaseClient } from '@/lib/s
 
 // POST /api/admin/chapters - Create a new chapter
 export async function POST(request: Request) {
-  const supabase = createServerSupabaseClient(request as any);
+  const supabase = await createServerSupabaseClient(request as any);
 
   // Check if user is authenticated and is admin
   const {
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
 
 // PUT /api/admin/chapters - Update an existing chapter
 export async function PUT(request: Request) {
-  const supabase = createServerSupabaseClient(request as any);
+  const supabase = await createServerSupabaseClient(request as any);
 
   // Check if user is authenticated and is admin
   const {
@@ -130,7 +130,7 @@ export async function PUT(request: Request) {
 
 // DELETE /api/admin/chapters - Delete a chapter
 export async function DELETE(request: Request) {
-  const supabase = createServerSupabaseClient(request as any);
+  const supabase = await createServerSupabaseClient(request as any);
 
   // Check if user is authenticated and is admin
   const {

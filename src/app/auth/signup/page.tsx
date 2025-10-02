@@ -1,16 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function SignupPage() {
   const { supabase } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [redirectTo, setRedirectTo] = useState('/learn');
+
+  useEffect(() => {
+    // Get the redirect parameter from URL
+    const redirect = searchParams.get('redirect');
+    if (redirect && redirect.startsWith('/')) {
+      setRedirectTo(redirect);
+    }
+  }, [searchParams]);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,7 +96,10 @@ export default function SignupPage() {
         </form>
         <p className="text-sm text-center text-gray-600">
           Already have an account?{' '}
-          <a href="/auth/login" className="font-medium text-accent-blue hover:underline">
+          <a
+            href={redirectTo !== '/learn' ? `/auth/login?redirect=${encodeURIComponent(redirectTo)}` : '/auth/login'}
+            className="font-medium text-accent-blue hover:underline"
+          >
             Sign in
           </a>
         </p>

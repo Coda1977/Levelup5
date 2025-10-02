@@ -7,7 +7,7 @@ export async function POST() {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
 
   // Helper to find or create a category by title
   async function ensureCategory(title: string, display_order: number) {

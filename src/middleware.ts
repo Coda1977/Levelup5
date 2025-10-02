@@ -83,12 +83,19 @@ export async function middleware(request: NextRequest) {
   // Require auth for non-public paths (e.g., /admin, /chat)
   if (!user && !isAuthPath && !isPublicPath) {
     console.log('Middleware: Redirecting to login from', pathname);
-    return NextResponse.redirect(new URL('/auth/login', request.url));
+    const loginUrl = new URL('/auth/login', request.url);
+    // Store the original destination to redirect back after login
+    loginUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
   // If signed in, prevent visiting auth pages
   if (user && isAuthPath) {
-    return NextResponse.redirect(new URL('/learn', request.url));
+    // Check if there's a redirect parameter to go back to the original destination
+    const redirectTo = request.nextUrl.searchParams.get('redirect');
+    const destination = redirectTo && redirectTo.startsWith('/') ? redirectTo : '/learn';
+    console.log('Middleware: Redirecting authenticated user from auth page to', destination);
+    return NextResponse.redirect(new URL(destination, request.url));
   }
 
   return response;

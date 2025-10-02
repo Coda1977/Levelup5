@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase-client';
 import { SYSTEM_PROMPT } from '@/lib/system-prompt';
 import { aiRateLimiter } from '@/lib/rate-limiter';
+import { fetchChapterContext, getChapterCount } from '@/lib/rag-helper';
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -11,8 +12,33 @@ const anthropic = new Anthropic({
 
 const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514';
 
+// Cache for chapter context (refresh every 5 minutes)
+let cachedChapterContext: string | null = null;
+let cachedChapterCount: number = 0;
+let lastCacheTime: number = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+async function getChapterContextCached(): Promise<{ context: string; count: number }> {
+  const now = Date.now();
+  if (cachedChapterContext && now - lastCacheTime < CACHE_DURATION) {
+    return { context: cachedChapterContext, count: cachedChapterCount };
+  }
+
+  // Fetch fresh data
+  const [context, count] = await Promise.all([
+    fetchChapterContext(),
+    getChapterCount()
+  ]);
+
+  cachedChapterContext = context;
+  cachedChapterCount = count;
+  lastCacheTime = now;
+
+  return { context, count };
+}
+
 export async function POST(request: Request) {
-  const supabase = createServerSupabaseClient(request as any);
+  const supabase = await createServerSupabaseClient(request as any);
 
   // Check authentication
   const {
@@ -83,8 +109,14 @@ export async function POST(request: Request) {
       .single();
 
     if (createError || !newConv) {
+      console.error('Failed to create conversation:', createError);
       return NextResponse.json(
-        { error: 'Failed to create conversation' },
+        {
+          error: 'Failed to create conversation',
+          details: createError?.message,
+          code: createError?.code,
+          hint: createError?.hint
+        },
         { status: 500 }
       );
     }
@@ -121,11 +153,21 @@ export async function POST(request: Request) {
   }
 
   try {
+    // Get chapter context for RAG
+    const { context: chapterContext, count: chapterCount } = await getChapterContextCached();
+    
+    // Build enhanced system prompt with chapter context
+    let enhancedSystemPrompt = SYSTEM_PROMPT.replace('CHAPTER_COUNT', chapterCount.toString());
+    
+    if (chapterContext) {
+      enhancedSystemPrompt += `\n\n---\n\n${chapterContext}`;
+    }
+
     // Call Anthropic API with streaming
     const stream = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 1024,
-      system: SYSTEM_PROMPT,
+      max_tokens: 2048,
+      system: enhancedSystemPrompt,
       messages: history.map((msg) => ({
         role: msg.role as 'user' | 'assistant',
         content: msg.content,

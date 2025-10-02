@@ -27,7 +27,7 @@ async function checkAdminAccess(supabase: any) {
 
 // POST /api/admin/categories - Create a new category
 export async function POST(request: Request) {
-  const supabase = createServerSupabaseClient(request as any);
+  const supabase = await createServerSupabaseClient(request as any);
   const accessCheck = await checkAdminAccess(supabase);
   
   if (!accessCheck.authorized) {
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 
 // PUT /api/admin/categories - Update an existing category
 export async function PUT(request: Request) {
-  const supabase = createServerSupabaseClient(request as any);
+  const supabase = await createServerSupabaseClient(request as any);
   const accessCheck = await checkAdminAccess(supabase);
   
   if (!accessCheck.authorized) {
@@ -113,7 +113,7 @@ export async function PUT(request: Request) {
 
 // DELETE /api/admin/categories - Delete a category
 export async function DELETE(request: Request) {
-  const supabase = createServerSupabaseClient(request as any);
+  const supabase = await createServerSupabaseClient(request as any);
   const accessCheck = await checkAdminAccess(supabase);
   
   if (!accessCheck.authorized) {

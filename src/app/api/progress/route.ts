@@ -4,7 +4,7 @@ import { createServerSupabaseClient } from '@/lib/supabase-client';
 // GET /api/progress - Fetch user's progress
 // Optional query param: chapterId (to get progress for a specific chapter)
 export async function GET(request: Request) {
-  const supabase = createServerSupabaseClient(request as any);
+  const supabase = await createServerSupabaseClient(request as any);
   
   // Get authenticated user
   const {
@@ -40,7 +40,7 @@ export async function GET(request: Request) {
 // POST /api/progress - Mark a chapter as completed
 // Body: { chapterId: string }
 export async function POST(request: Request) {
-  const supabase = createServerSupabaseClient(request as any);
+  const supabase = await createServerSupabaseClient(request as any);
 
   // Get authenticated user
   const {
@@ -109,7 +109,7 @@ export async function POST(request: Request) {
 // DELETE /api/progress - Remove progress for a chapter
 // Body: { chapterId: string }
 export async function DELETE(request: Request) {
-  const supabase = createServerSupabaseClient(request as any);
+  const supabase = await createServerSupabaseClient(request as any);
 
   // Get authenticated user
   const {

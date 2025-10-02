@@ -4,7 +4,7 @@ import { createServerSupabaseClient, createServiceSupabaseClient } from '@/lib/s
 // POST /api/admin/dev/publish_all
 // Admin-only: bulk publish all draft chapters (is_published=false)
 export async function POST() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const svc = createServiceSupabaseClient();
 
   // Authn
