@@ -32,24 +32,38 @@ export default function ScrollStory() {
 
   return (
     <main className="scroll-story-container">
-      {/* Section 1: No more "What was that tool again?" */}
+      {/* Section 1: Transforming Insight into Action */}
       <section
         ref={(el) => { sectionsRef.current[0] = el; }}
         className="scroll-section"
       >
         <div className="scroll-content fade-in">
-          <h1 className="text-6xl md:text-7xl font-black mb-8 text-text-primary">
-            No more{' '}
-            <span className="text-accent-yellow">
-              "What was that tool again?"
-            </span>
+          <h1 className="h1-hero">
+            Transforming Insight
+            <br />
+            into Action
           </h1>
         </div>
       </section>
 
-      {/* Section 2: You've completed the training */}
+      {/* Section 2: No more "What was that tool again?" */}
       <section
         ref={(el) => { sectionsRef.current[1] = el; }}
+        className="scroll-section"
+      >
+        <div className="scroll-content fade-in">
+          <h2 className="text-6xl md:text-7xl font-black mb-8 text-text-primary">
+            No more{' '}
+            <span className="text-accent-yellow">
+              "What was that tool again?"
+            </span>
+          </h2>
+        </div>
+      </section>
+
+      {/* Section 3: You've completed the training */}
+      <section
+        ref={(el) => { sectionsRef.current[2] = el; }}
         className="scroll-section"
       >
         <div className="scroll-content fade-in">
@@ -59,9 +73,9 @@ export default function ScrollStory() {
         </div>
       </section>
 
-      {/* Section 3: Now make it stick */}
+      {/* Section 4: Now make it stick */}
       <section
-        ref={(el) => { sectionsRef.current[2] = el; }}
+        ref={(el) => { sectionsRef.current[3] = el; }}
         className="scroll-section"
       >
         <div className="scroll-content fade-in">
@@ -71,9 +85,9 @@ export default function ScrollStory() {
         </div>
       </section>
 
-      {/* Section 4: CTA + Features */}
+      {/* Section 5: CTA + Features */}
       <section
-        ref={(el) => { sectionsRef.current[3] = el; }}
+        ref={(el) => { sectionsRef.current[4] = el; }}
         className="scroll-section"
       >
         <div className="scroll-content fade-in max-w-5xl mx-auto px-6">
@@ -123,9 +137,9 @@ export default function ScrollStory() {
         </div>
       </section>
 
-      {/* Section 5: Quote Ribbon */}
+      {/* Section 6: Quote Ribbon */}
       <section
-        ref={(el) => { sectionsRef.current[4] = el; }}
+        ref={(el) => { sectionsRef.current[5] = el; }}
         className="scroll-section"
         style={{ background: 'var(--accent-blue)' }}
       >
