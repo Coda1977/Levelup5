@@ -457,3 +457,47 @@ body {
     border-radius: var(--radius-sm);
   }
 }
+
+/* ============================================
+   SCROLL STORYTELLING
+   ============================================ */
+
+.scroll-story-container {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+  background: var(--gradient-hero);
+}
+
+.scroll-section {
+  scroll-snap-align: start;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+}
+
+.scroll-content {
+  text-align: center;
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* Disable scroll-snap on mobile for better UX */
+@media (max-width: 768px) {
+  .scroll-story-container {
+    scroll-snap-type: none;
+  }
+  
+  .scroll-section {
+    scroll-snap-align: none;
+    min-height: 80vh;
+  }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-story-container {
+    scroll-snap-type: none;
+  }
+}

@@ -36,7 +36,7 @@ export default function Navbar() {
     <header className="bg-white/90 backdrop-blur sticky top-0 z-40 border-b border-black/5">
       <div className="container-max px-5 py-3 flex items-center justify-between">
         <Link href="/" className="font-extrabold tracking-tight text-xl">
-          LevelUp
+          Level<span className="relative" style={{ top: '-0.15em', marginLeft: '0.05em' }}>Up</span>
         </Link>
 
         <nav className="flex items-center gap-4">
