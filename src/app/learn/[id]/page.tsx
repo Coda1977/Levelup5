@@ -94,14 +94,14 @@ export default async function ChapterPage({ params }: Params) {
   return (
     <main className="section-container">
       <div className="container-max">
-        <header className="mb-8">
-          <p className="text-small text-text-secondary mb-2">
-            <Link href="/learn" className="underline">
+        <header className="mb-6 sm:mb-8">
+          <p className="text-sm sm:text-base text-text-secondary mb-2">
+            <Link href="/learn" className="underline hover:text-text-primary transition-colors">
               ← Back to Learn
             </Link>
           </p>
-          <h1 className="h2-section">{chapter.title}</h1>
-          <p className="text-small text-text-secondary">Order {chapter.display_order}</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">{chapter.title}</h1>
+          <p className="text-sm sm:text-base text-text-secondary">Chapter {chapter.display_order}</p>
         </header>
 
         {/* Audio Player - appears if audio is available */}
@@ -110,29 +110,35 @@ export default async function ChapterPage({ params }: Params) {
         )}
 
         <article
-          className="prose max-w-none bg-white rounded-2xl p-6 sm:p-8 shadow-sm"
+          className="prose prose-sm sm:prose lg:prose-lg max-w-none bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-sm"
           // Content sanitized via strict allowlist sanitizer
           dangerouslySetInnerHTML={{ __html: safeHtml }}
         />
 
-        <div className="mt-8 flex justify-center">
+        <div className="mt-6 sm:mt-8 flex justify-center">
           <MarkCompleteButtonWrapper chapterId={chapter.id} initialCompleted={isCompleted} />
         </div>
 
-        <nav className="mt-10 flex items-center justify-between gap-4">
+        <nav className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
           {prev ? (
-            <Link href={`/learn/${prev.id}`} className="btn-primary">
-              ← {prev.title}
+            <Link
+              href={`/learn/${prev.id}`}
+              className="btn-primary text-center min-h-[48px] flex items-center justify-center"
+            >
+              <span className="truncate">← {prev.title}</span>
             </Link>
           ) : (
-            <span />
+            <span className="hidden sm:block" />
           )}
           {next ? (
-            <Link href={`/learn/${next.id}`} className="btn-primary">
-              {next.title} →
+            <Link
+              href={`/learn/${next.id}`}
+              className="btn-primary text-center min-h-[48px] flex items-center justify-center"
+            >
+              <span className="truncate">{next.title} →</span>
             </Link>
           ) : (
-            <span />
+            <span className="hidden sm:block" />
           )}
         </nav>
       </div>

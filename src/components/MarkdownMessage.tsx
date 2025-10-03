@@ -56,8 +56,8 @@ export default function MarkdownMessage({ content, role, onQuickReply }: Markdow
   if (role === 'user') {
     return (
       <div className="flex justify-end">
-        <div className="max-w-[80%] rounded-2xl px-6 py-4 bg-accent-yellow text-text-primary">
-          <p className="whitespace-pre-wrap">{content}</p>
+        <div className="max-w-[95%] sm:max-w-[85%] md:max-w-[80%] rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-accent-yellow text-text-primary">
+          <p className="whitespace-pre-wrap text-sm sm:text-base">{content}</p>
         </div>
       </div>
     );
@@ -65,12 +65,12 @@ export default function MarkdownMessage({ content, role, onQuickReply }: Markdow
 
   return (
     <div className="flex justify-start">
-      <div className="max-w-[85%]">
-        <div className="rounded-2xl px-6 py-4 bg-white text-text-primary relative group shadow-sm">
+      <div className="max-w-[95%] sm:max-w-[90%] md:max-w-[85%]">
+        <div className="rounded-2xl px-4 sm:px-6 py-3 sm:py-4 bg-white text-text-primary relative group shadow-sm">
           {/* Copy Button */}
           <button
             onClick={handleCopy}
-            className="absolute top-2 right-2 p-2 rounded-lg bg-white/80 hover:bg-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute top-2 right-2 p-2 rounded-lg bg-white/80 hover:bg-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity min-w-[44px] min-h-[44px] flex items-center justify-center"
             title="Copy message"
           >
             {copied ? (
@@ -85,22 +85,22 @@ export default function MarkdownMessage({ content, role, onQuickReply }: Markdow
           </button>
 
           {/* Markdown Content */}
-          <div className="prose prose-sm max-w-none">
+          <div className="prose prose-sm sm:prose max-w-none">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
                 // Headings
-                h1: ({ node, ...props }) => <h1 className="text-2xl font-bold mt-6 mb-4" {...props} />,
-                h2: ({ node, ...props }) => <h2 className="text-xl font-bold mt-5 mb-3" {...props} />,
-                h3: ({ node, ...props }) => <h3 className="text-lg font-semibold mt-4 mb-2" {...props} />,
+                h1: ({ node, ...props }) => <h1 className="text-xl sm:text-2xl font-bold mt-4 sm:mt-6 mb-3 sm:mb-4" {...props} />,
+                h2: ({ node, ...props }) => <h2 className="text-lg sm:text-xl font-bold mt-4 sm:mt-5 mb-2 sm:mb-3" {...props} />,
+                h3: ({ node, ...props }) => <h3 className="text-base sm:text-lg font-semibold mt-3 sm:mt-4 mb-2" {...props} />,
                 
                 // Paragraphs
-                p: ({ node, ...props }) => <p className="mb-4 leading-relaxed" {...props} />,
+                p: ({ node, ...props }) => <p className="mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base" {...props} />,
                 
                 // Lists
-                ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-4 space-y-1" {...props} />,
-                ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-4 space-y-1" {...props} />,
-                li: ({ node, ...props }) => <li className="ml-4" {...props} />,
+                ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-3 sm:mb-4 space-y-1 text-sm sm:text-base" {...props} />,
+                ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-3 sm:mb-4 space-y-1 text-sm sm:text-base" {...props} />,
+                li: ({ node, ...props }) => <li className="ml-2 sm:ml-4 text-sm sm:text-base" {...props} />,
                 
                 // Strong/Bold
                 strong: ({ node, ...props }) => <strong className="font-bold text-gray-900" {...props} />,
@@ -109,13 +109,13 @@ export default function MarkdownMessage({ content, role, onQuickReply }: Markdow
                 code: ({ node, inline, className, children, ...props }: any) => {
                   if (inline) {
                     return (
-                      <code className="bg-gray-200 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
+                      <code className="bg-gray-200 px-1.5 py-0.5 rounded text-xs sm:text-sm font-mono" {...props}>
                         {children}
                       </code>
                     );
                   }
                   return (
-                    <code className="block bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto my-4 text-sm font-mono" {...props}>
+                    <code className="block bg-gray-800 text-gray-100 p-3 sm:p-4 rounded-lg overflow-x-auto my-3 sm:my-4 text-xs sm:text-sm font-mono" {...props}>
                       {children}
                     </code>
                   );
@@ -144,7 +144,7 @@ export default function MarkdownMessage({ content, role, onQuickReply }: Markdow
               <button
                 key={idx}
                 onClick={() => onQuickReply(question)}
-                className="px-4 py-2 bg-white border-2 border-accent-yellow rounded-full text-sm font-medium hover:bg-accent-yellow/10 transition-colors text-left"
+                className="px-4 py-3 bg-white border-2 border-accent-yellow rounded-full text-sm font-medium hover:bg-accent-yellow/10 transition-colors text-left min-h-[44px] flex items-center"
               >
                 {question}
               </button>

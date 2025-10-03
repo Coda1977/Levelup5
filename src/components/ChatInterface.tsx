@@ -162,7 +162,7 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="flex h-[100dvh] bg-gray-50 overflow-hidden">
       {/* Conversation Sidebar - Hidden by default, shown via dropdown */}
       {showSidebar && (
         <>
@@ -172,7 +172,7 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
             onClick={() => setShowSidebar(false)}
           />
           {/* Sidebar - Opens from RIGHT side */}
-          <div className="fixed inset-y-0 right-0 z-50 w-80">
+          <div className="fixed inset-y-0 right-0 z-50 w-80 max-w-[85vw]">
             <ConversationSidebar
               currentConversationId={conversationId}
               onSelectConversation={handleSelectConversation}
@@ -185,17 +185,17 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
       {/* Main Chat Area - Single scrollable container */}
       <div className="flex-1 flex flex-col min-h-0">
         {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="text-3xl">✨</div>
-            <div>
-              <h1 className="h3-card">Your AI Coach</h1>
-              <p className="text-tiny">Ready to help</p>
+        <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="text-2xl sm:text-3xl flex-shrink-0">✨</div>
+            <div className="min-w-0">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-semibold truncate">Your AI Coach</h1>
+              <p className="text-xs sm:text-sm text-gray-600">Ready to help</p>
             </div>
           </div>
           <button
             onClick={() => setShowSidebar(!showSidebar)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="Toggle conversations"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,13 +205,13 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
         </div>
 
         {/* Messages Container - Single scroller */}
-        <div className="flex-1 overflow-y-auto px-4 py-6">
-          <div className="max-w-4xl mx-auto space-y-6 pb-4">
+        <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 sm:py-6">
+          <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 pb-4">
             {messages.length === 0 ? (
-              <div className="text-center py-20 fade-in">
-                <div className="text-6xl mb-6">💬</div>
-                <h2 className="h2-section mb-4">Start a Conversation</h2>
-                <p className="text-body mb-8">
+              <div className="text-center py-12 sm:py-20 fade-in px-4">
+                <div className="text-5xl sm:text-6xl mb-4 sm:mb-6">💬</div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Start a Conversation</h2>
+                <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8">
                   Ask me anything about management, leadership, or team dynamics.
                 </p>
               </div>
@@ -244,28 +244,28 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
 
         {/* Error Message */}
         {error && (
-          <div className="px-4 pb-2 flex-shrink-0">
-            <div className="max-w-4xl mx-auto p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          <div className="px-3 sm:px-4 pb-2 flex-shrink-0">
+            <div className="max-w-4xl mx-auto p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg text-sm sm:text-base text-red-700">
               {error}
             </div>
           </div>
         )}
 
         {/* Input Form */}
-        <div className="border-t border-gray-200 bg-white px-4 py-4 flex-shrink-0">
-          <form onSubmit={(e) => handleSubmit(e)} className="max-w-4xl mx-auto flex gap-4">
+        <div className="border-t border-gray-200 bg-white px-3 sm:px-4 py-3 sm:py-4 flex-shrink-0 safe-area-bottom">
+          <form onSubmit={(e) => handleSubmit(e)} className="max-w-4xl mx-auto flex flex-col sm:flex-row gap-2 sm:gap-4">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message..."
               disabled={isLoading}
-              className="flex-1 px-6 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-accent-yellow focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-body"
+              className="flex-1 px-4 sm:px-6 py-3 sm:py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-accent-yellow focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-base sm:text-lg min-h-[48px]"
             />
             <button
               type="submit"
               disabled={isLoading || !input.trim()}
-              className="btn-primary px-8 py-4"
+              className="btn-primary px-6 sm:px-8 py-3 sm:py-4 min-h-[48px] whitespace-nowrap"
             >
               {isLoading ? 'Sending...' : 'Send →'}
             </button>

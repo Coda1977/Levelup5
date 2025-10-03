@@ -13,6 +13,7 @@ export default function AudioPlayer({ audioUrl, title }: AudioPlayerProps) {
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1.0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
@@ -90,22 +91,36 @@ export default function AudioPlayer({ audioUrl, title }: AudioPlayerProps) {
   const speedOptions = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-6 sticky top-20 z-30">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-6 md:sticky md:top-20 z-30">
       <audio ref={audioRef} src={audioUrl} preload="metadata" />
       
-      {/* Title */}
+      {/* Title with Collapse Button */}
       {title && (
-        <div className="mb-3">
+        <div className="mb-3 flex items-center justify-between">
           <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
             <svg className="w-5 h-5 text-accent-yellow" fill="currentColor" viewBox="0 0 20 20">
               <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
             </svg>
             Listen to Chapter
           </h3>
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            aria-label={isCollapsed ? 'Expand audio player' : 'Collapse audio player'}
+          >
+            <svg
+              className={`w-5 h-5 transition-transform ${isCollapsed ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
         </div>
       )}
 
-      <div className="flex flex-col gap-3">
+      <div className={`flex flex-col gap-3 ${isCollapsed ? 'hidden md:flex' : ''}`}>
         {/* Progress Bar */}
         <div className="flex items-center gap-3">
           <span className="text-xs text-gray-600 w-12 text-right">
@@ -154,18 +169,18 @@ export default function AudioPlayer({ audioUrl, title }: AudioPlayerProps) {
           </button>
 
           {/* Speed Control */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs text-gray-600 hidden sm:inline">Speed:</span>
-            <div className="flex gap-1">
+            <div className="flex gap-1 flex-wrap">
               {speedOptions.map((speed) => (
                 <button
                   key={speed}
                   onClick={() => changeSpeed(speed)}
                   disabled={isLoading}
                   className={`
-                    px-2 py-1 text-xs font-medium rounded transition-colors
-                    ${playbackRate === speed 
-                      ? 'bg-accent-yellow text-gray-900' 
+                    px-3 py-2 text-xs font-medium rounded transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center
+                    ${playbackRate === speed
+                      ? 'bg-accent-yellow text-gray-900'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }
                     disabled:opacity-50 disabled:cursor-not-allowed
