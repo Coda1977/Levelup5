@@ -1,0 +1,42 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "LevelUp" [ref=e4]:
+        - /url: /
+        - text: Level
+        - generic [ref=e5]: Up
+      - navigation [ref=e6]:
+        - link "Sign in" [ref=e7] [cursor=pointer]:
+          - /url: /auth/login
+  - main [ref=e8]:
+    - heading "Transforming Insight into Action" [level=1] [ref=e11]:
+      - text: Transforming Insight
+      - text: into Action
+    - heading "No more \"What was that tool again?\"" [level=2] [ref=e14]:
+      - text: No more
+      - generic [ref=e15]: "\"What was that tool again?\""
+    - heading "You've completed the training." [level=2] [ref=e18]
+    - heading "Now make it stick." [level=2] [ref=e21]
+    - generic [ref=e23]:
+      - link "Get started with LevelUp" [ref=e25] [cursor=pointer]:
+        - /url: /auth/signup
+        - text: Let's Go
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - generic [ref=e28]: "01"
+          - heading "Learn on the Go" [level=3] [ref=e29]
+          - paragraph [ref=e30]: 5-minute lessons with videos and podcasts for busy schedules.
+        - generic [ref=e31]:
+          - generic [ref=e32]: "02"
+          - heading "Personalized Guidance" [level=3] [ref=e33]
+          - paragraph [ref=e34]: Chat with an AI mentor to tackle real situations.
+        - generic [ref=e35]:
+          - generic [ref=e36]: "03"
+          - heading "Dive Deep" [level=3] [ref=e37]
+          - paragraph [ref=e38]: Long-form summaries of the greatest management books.
+    - blockquote [ref=e41]: "\"Action may not always bring happiness, but there is no happiness without action\""
+  - alert [ref=e42]
+```

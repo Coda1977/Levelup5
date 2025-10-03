@@ -1,0 +1,73 @@
+# Page snapshot
+
+```yaml
+- dialog "Unhandled Runtime Error" [ref=e4]:
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - navigation [ref=e8]:
+          - button "previous" [disabled] [ref=e9]:
+            - img "previous" [ref=e10]
+          - button "next" [disabled] [ref=e12]:
+            - img "next" [ref=e13]
+          - generic [ref=e15]:
+            - generic [ref=e16]: "1"
+            - text: of
+            - generic [ref=e17]: "1"
+            - text: error
+          - generic [ref=e18]:
+            - generic "An outdated version detected (latest is 15.5.4), upgrade is highly recommended!" [ref=e20]: Next.js (14.2.5) is outdated
+            - link "(learn more)" [ref=e21]:
+              - /url: https://nextjs.org/docs/messages/version-staleness
+        - button "Close" [ref=e22] [cursor=pointer]:
+          - img [ref=e24] [cursor=pointer]
+      - heading "Unhandled Runtime Error" [level=1] [ref=e27]
+      - paragraph [ref=e28]: "Error: Failed to load chapter: 500"
+    - generic [ref=e29]:
+      - heading "Source" [level=2] [ref=e30]
+      - generic [ref=e31]:
+        - link "src\\app\\learn\\[id]\\page.tsx (43:11) @ ChapterPage" [ref=e33] [cursor=pointer]:
+          - generic [ref=e34] [cursor=pointer]: src\app\learn\[id]\page.tsx (43:11) @ ChapterPage
+          - img [ref=e35] [cursor=pointer]
+        - generic [ref=e39]:
+          - generic [ref=e41]: 41 |
+          - generic [ref=e42]: "}"
+          - generic [ref=e44]: 42 |
+          - generic [ref=e46]: if
+          - generic [ref=e47]: (
+          - generic [ref=e48]: "!"
+          - generic [ref=e49]: detailRes
+          - generic [ref=e50]: .
+          - generic [ref=e51]: "ok) {"
+          - generic [ref=e52]: ">"
+          - generic [ref=e53]: 43 |
+          - generic [ref=e55]: throw
+          - generic [ref=e57]: new
+          - generic [ref=e59]: Error
+          - generic [ref=e60]: (
+          - generic [ref=e61]: "`Failed to load chapter: ${detailRes.status}`"
+          - generic [ref=e62]: )
+          - generic [ref=e63]: ;
+          - generic [ref=e65]: "|"
+          - generic [ref=e67]: ^
+          - generic [ref=e69]: 44 |
+          - generic [ref=e70]: "}"
+          - generic [ref=e72]: 45 |
+          - generic [ref=e74]: const
+          - generic [ref=e75]: "{ data"
+          - generic [ref=e76]: ":"
+          - generic [ref=e77]: "chapter }"
+          - generic [ref=e78]: =
+          - generic [ref=e79]: (
+          - generic [ref=e80]: await
+          - generic [ref=e81]: detailRes
+          - generic [ref=e82]: .
+          - generic [ref=e83]: json())
+          - generic [ref=e84]: as
+          - generic [ref=e85]: "{ data"
+          - generic [ref=e86]: ":"
+          - generic [ref=e88]: Chapter
+          - generic [ref=e89]: "}"
+          - generic [ref=e90]: ;
+          - generic [ref=e92]: 46 |
+```

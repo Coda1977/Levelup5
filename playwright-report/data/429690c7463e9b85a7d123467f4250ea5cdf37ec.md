@@ -1,0 +1,114 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "LevelUp" [ref=e4]:
+        - /url: /
+        - text: Level
+        - generic [ref=e5]: Up
+      - navigation [ref=e6]:
+        - link "Sign in" [ref=e7] [cursor=pointer]:
+          - /url: /auth/login
+  - alert [ref=e8]
+  - main [ref=e9]:
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - paragraph [ref=e12]:
+          - link "← Back to Learn" [ref=e13]:
+            - /url: /learn
+        - heading "The Role of Managers" [level=1] [ref=e14]
+        - paragraph [ref=e15]: Order 1
+      - generic [ref=e16]:
+        - heading "Listen to Chapter" [level=3] [ref=e18]:
+          - img [ref=e19]
+          - text: Listen to Chapter
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - generic [ref=e23]: 0:00
+            - slider [ref=e24] [cursor=pointer]: "0"
+            - generic [ref=e25]: 2:01
+          - generic [ref=e26]:
+            - button "Play" [ref=e27] [cursor=pointer]:
+              - img [ref=e28] [cursor=pointer]
+            - generic [ref=e30]:
+              - generic [ref=e31]: "Speed:"
+              - generic [ref=e32]:
+                - button "0.5x" [ref=e33] [cursor=pointer]
+                - button "0.75x" [ref=e34] [cursor=pointer]
+                - button "1x" [ref=e35] [cursor=pointer]
+                - button "1.25x" [ref=e36] [cursor=pointer]
+                - button "1.5x" [ref=e37] [cursor=pointer]
+                - button "2x" [ref=e38] [cursor=pointer]
+      - article [ref=e39]:
+        - blockquote [ref=e40]:
+          - paragraph [ref=e41]: Being a manager is as easy as riding a bike. Except the bike is on fire, you're on fire, everything is on fire, and you're in hell.
+        - paragraph [ref=e42]: That manager having a bad day? They got one thing right.
+        - paragraph [ref=e43]: Management isn't a promotion. It's a career change. The skills that made you great at your job? They're now mostly irrelevant. Your technical excellence, your ability to crush spreadsheets or write beautiful code—none of that matters if your team delivers mediocre results.
+        - paragraph [ref=e44]:
+          - text: "Here's your new reality:"
+          - strong [ref=e45]: You are responsible for the work of your direct team.
+        - paragraph [ref=e46]: Not responsible for doing the work. Responsible for the work getting done, and done well.
+        - paragraph [ref=e47]: Some new managers try to hack this by taking on all the important work themselves. They become the hero developer who codes all night. The hero marketer who writes every campaign. The hero salesperson who closes every deal.
+        - paragraph [ref=e48]: It's understandable. It's also unsustainable. And it's not management—it's just doing your old job with a fancier title and more meetings.
+        - paragraph [ref=e49]: "Your actual job breaks down into two parts:"
+        - paragraph [ref=e50]:
+          - strong [ref=e51]: "1. Make the work productive:"
+          - text: Create goals that matter. Rebuild broken processes. Invent tools that multiply output. This is the "hard" stuff everyone thinks management is about.
+        - paragraph [ref=e52]:
+          - strong [ref=e53]: "2. Make the worker achieving:"
+          - text: Give clear direction. Coach through problems. Build relationships that create trust. Deliver feedback that actually changes behavior. This is the "soft" stuff that's actually harder.
+        - paragraph [ref=e54]: If someone on your team is mediocre, you did a mediocre job helping them learn. If your team has a reputation for missing deadlines, you have a reputation for missing deadlines. If they fail, you fail.
+        - paragraph [ref=e55]: The whole game is getting work done through other people, not over them or under them.
+        - heading "Try This Week" [level=3] [ref=e56]
+        - paragraph [ref=e57]: List your top 5 work activities from last week. Circle the ones only you could have done. If you circled more than 2, you're still doing your old job. Pick one task to delegate this week using the RACI framework (you'll learn it in the Delegation chapter).
+        - iframe [ref=e60]:
+          - generic "YouTube Video Player" [ref=f1e3]:
+            - generic [ref=f1e5]:
+              - link "Photo image of reh" [ref=f1e7]:
+                - /url: https://www.youtube.com/channel/UCj-QBf1Zpj5fqsQyd0pM1Hw?embeds_referring_euri=http%3A%2F%2Flocalhost%3A3000%2F
+              - link "Lady Gaga & Bradley Cooper - Shallow (Alternative Editing with Different Takes)" [ref=f1e10]:
+                - /url: https://www.youtube.com/watch?v=3Z7ddmHlbdU
+              - button "Share" [ref=f1e12] [cursor=pointer]:
+                - generic [ref=f1e13] [cursor=pointer]:
+                  - img
+                - generic [ref=f1e14] [cursor=pointer]: Share
+            - button "Play" [ref=f1e17] [cursor=pointer]:
+              - img
+            - link "Watch on YouTube" [ref=f1e18]:
+              - /url: https://www.youtube.com/watch?v=3Z7ddmHlbdU&embeds_referring_euri=http%3A%2F%2Flocalhost%3A3000%2F
+              - generic [ref=f1e19]: Watch on
+              - generic [ref=f1e20]:
+                - img
+        - iframe [ref=e63]:
+          - generic [active] [ref=f2e1]:
+            - generic [ref=f2e6]:
+              - button "Play on Spotify" [ref=f2e10]:
+                - img [ref=f2e11]
+              - generic [ref=f2e13]:
+                - heading "Brené and Adam Grant on Time Scarcity, Asking Questions, and Pocket Presence" [level=1] [ref=f2e14]:
+                  - link "Brené and Adam Grant on Time Scarcity, Asking Questions, and Pocket Presence" [ref=f2e18]:
+                    - /url: https://open.spotify.com/episode/1DO6a3X185obCPsuEX48CX?go=1&sp_cid=98b4b124ff15d23eee8c9260cb1da644&utm_source=embed_player_p&utm_medium=desktop&si=47fff84d679e4c47
+                - heading "Oct 1 Dare to Lead with Brené Brown" [level=2] [ref=f2e20]:
+                  - generic [ref=f2e24]:
+                    - generic [ref=f2e26]: Oct 1
+                    - generic [ref=f2e27]: ·
+                    - link "Dare to Lead with Brené Brown" [ref=f2e29]:
+                      - /url: https://open.spotify.com/show/3oEPsPKDhPVoNNL7pH5db6?go=1&sp_cid=98b4b124ff15d23eee8c9260cb1da644&utm_source=embed_player_p&utm_medium=desktop&si=47fff84d679e4c47
+                - button "Save on Spotify" [ref=f2e31] [cursor=pointer]:
+                  - img [ref=f2e33] [cursor=pointer]
+                  - generic [ref=f2e36] [cursor=pointer]: Save on Spotify
+              - generic [ref=f2e37]:
+                - generic [ref=f2e38]:
+                  - button "37:22 remaining time. Toggle to elapsed." [disabled] [pressed] [ref=f2e39] [cursor=pointer]:
+                    - generic [ref=f2e40] [cursor=pointer]: 37:22
+                  - button "More" [ref=f2e41] [cursor=pointer]:
+                    - img [ref=f2e42] [cursor=pointer]
+                - button "Play" [ref=f2e45] [cursor=pointer]:
+                  - img "Something went wrong" [ref=f2e46] [cursor=pointer]
+            - alert [ref=f2e48]
+        - paragraph
+      - button "Log in to Track Progress" [ref=e65] [cursor=pointer]
+      - navigation
+```
