@@ -94,6 +94,11 @@
   --transition-fast: 150ms ease-out;
   --transition-base: 200ms ease-out;
   --transition-slow: 300ms ease-out;
+
+  /* Animation System for Landing Page */
+  --transition-duration: 800ms;
+  --transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+  --reveal-distance: 40px;
 }
 
 /* ============================================
@@ -411,6 +416,31 @@ body {
   *,
   *::before,
   *::after {
+/* ============================================
+   REVEAL ANIMATION SYSTEM
+   ============================================ */
+
+.reveal-out {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+  transition: opacity var(--transition-duration) var(--transition-easing),
+              transform var(--transition-duration) var(--transition-easing);
+}
+
+.reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-out,
+  .reveal-in {
+    transition: none;
+    transform: none;
+  }
+}
+
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
