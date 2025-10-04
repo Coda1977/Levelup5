@@ -91,7 +91,7 @@ export default function AudioPlayer({ audioUrl, title }: AudioPlayerProps) {
   const speedOptions = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-6 md:sticky md:top-20 z-30">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-6 z-30">
       <audio ref={audioRef} src={audioUrl} preload="metadata" />
       
       {/* Title with Collapse Button */}

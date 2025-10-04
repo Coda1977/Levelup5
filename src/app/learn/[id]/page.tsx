@@ -110,7 +110,7 @@ export default async function ChapterPage({ params }: Params) {
         )}
 
         <article
-          className="prose prose-sm sm:prose lg:prose-lg max-w-none bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-sm"
+          className="prose prose-sm sm:prose lg:prose-lg !max-w-none bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-sm"
           // Content sanitized via strict allowlist sanitizer
           dangerouslySetInnerHTML={{ __html: safeHtml }}
         />
