@@ -38,14 +38,14 @@ export default function Navbar() {
   };
 
   return (
-    <header className="bg-white/90 backdrop-blur sticky top-0 z-40 border-b border-black/5">
-      <div className="container-max px-4 sm:px-5 py-3 flex items-center justify-between">
+    <header className="bg-white/90 backdrop-blur sticky top-0 z-40 border-b border-black/5 w-full overflow-x-hidden">
+      <div className="container-max px-4 sm:px-5 py-3 flex items-center justify-between max-w-full">
         <Link href="/" className="font-extrabold tracking-tight text-lg sm:text-xl" onClick={closeMobileMenu}>
           Level<span className="relative" style={{ top: '-0.15em', marginLeft: '0.05em' }}>Up</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-4">
+        <nav className="hidden md:flex items-center gap-2 lg:gap-4 flex-shrink-0">
           {session && (
             <>
               <Link href="/learn" className="text-sm font-medium hover:underline">
@@ -69,14 +69,14 @@ export default function Navbar() {
           {session ? (
             <button
               onClick={handleSignOut}
-              className="btn-secondary text-sm px-4 py-2"
+              className="btn-secondary text-sm px-3 py-2 md:px-4 whitespace-nowrap"
             >
               Sign out
             </button>
           ) : (
             <Link
               href="/auth/login"
-              className="btn-primary text-sm px-4 py-2"
+              className="btn-primary text-sm px-3 py-2 md:px-4 whitespace-nowrap"
             >
               Sign in
             </Link>

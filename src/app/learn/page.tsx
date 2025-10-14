@@ -131,7 +131,7 @@ export default async function LearnPage() {
         {/* Header with greeting */}
         <header className="mb-10 fade-in">
           <h1 className="h1-page mb-4">
-            Welcome back, {userName} 👋
+            Welcome back 👋
           </h1>
           
           {/* Progress Bar */}
