@@ -1,0 +1,15 @@
+{
+  "vercel": {
+    "token": "JoQAcqTc7kiwXjgPHMu7wPWN",
+    "projectId": "prj_0onYSYT8OydrH2RGig7je5Id8Wtj",
+    "teamId": ""
+  },
+  "godaddy": {
+    "apiKey": "enrM2mJM4UW1_R7VR4ofzNMsvFALEDvgHQj",
+    "apiSecret": "Xf2h1io59Dw1ti1JN7GJ3W"
+  },
+  "supabase": {
+    "projectRef": "oexnplzctgmirzakmlba",
+    "anonKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9leG5wbHpjdGdtaXJ6YWttbGJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg2MDU0ODQsImV4cCI6MjA3NDE4MTQ4NH0.qgUgublkSMms389ngNYZ3Wp35cJwg2aArLZFDdqcycg"
+  }
+}
