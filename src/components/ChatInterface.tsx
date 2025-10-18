@@ -162,7 +162,7 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
   };
 
   return (
-    <div className="flex h-[100dvh] bg-gray-50 overflow-hidden">
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Conversation Sidebar - Hidden by default, shown via dropdown */}
       {showSidebar && (
         <>
@@ -171,8 +171,8 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
             className="fixed inset-0 bg-black/50 z-40"
             onClick={() => setShowSidebar(false)}
           />
-          {/* Sidebar - Opens from RIGHT side */}
-          <div className="fixed inset-y-0 right-0 z-50 w-80 max-w-[85vw]">
+          {/* Sidebar - Opens from LEFT side (more conventional) */}
+          <div className="fixed inset-y-0 left-0 z-50 w-80 max-w-[85vw] transform transition-transform duration-300 ease-out">
             <ConversationSidebar
               currentConversationId={conversationId}
               onSelectConversation={handleSelectConversation}
@@ -183,14 +183,14 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
       )}
 
       {/* Main Chat Area - Single scrollable container */}
-      <div className="flex-1 flex flex-col min-h-0">
-        {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between flex-shrink-0">
+      <div className="flex-1 flex flex-col min-h-0 max-h-screen">
+        {/* Header - More compact on mobile */}
+        <div className="bg-white border-b border-gray-200 px-4 sm:px-6 py-2 sm:py-4 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <div className="text-2xl sm:text-3xl flex-shrink-0">✨</div>
+            <div className="text-xl sm:text-3xl flex-shrink-0">✨</div>
             <div className="min-w-0">
-              <h1 className="text-lg sm:text-xl md:text-2xl font-semibold truncate">Your AI Coach</h1>
-              <p className="text-xs sm:text-sm text-gray-600">Ready to help</p>
+              <h1 className="text-base sm:text-xl md:text-2xl font-semibold truncate">Your AI Coach</h1>
+              <p className="text-xs sm:text-sm text-gray-600 hidden sm:block">Ready to help</p>
             </div>
           </div>
           <button
@@ -204,16 +204,37 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
           </button>
         </div>
 
-        {/* Messages Container - Single scroller */}
-        <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 sm:py-6">
+        {/* Messages Container - Single scroller with min-h-0 to constrain */}
+        <div className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 sm:py-6 min-h-0">
           <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 pb-4">
             {messages.length === 0 ? (
               <div className="text-center py-12 sm:py-20 fade-in px-4">
                 <div className="text-5xl sm:text-6xl mb-4 sm:mb-6">💬</div>
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">Start a Conversation</h2>
-                <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8">
+                <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto">
                   Ask me anything about management, leadership, or team dynamics.
                 </p>
+                {/* Add quick start suggestions */}
+                <div className="flex flex-wrap gap-2 justify-center max-w-2xl mx-auto">
+                  <button
+                    onClick={() => handleQuickReply("How can I improve team communication?")}
+                    className="px-4 py-2 bg-white border-2 border-gray-200 rounded-full hover:border-accent-yellow transition-colors text-sm"
+                  >
+                    💬 Team Communication
+                  </button>
+                  <button
+                    onClick={() => handleQuickReply("What are effective leadership strategies?")}
+                    className="px-4 py-2 bg-white border-2 border-gray-200 rounded-full hover:border-accent-yellow transition-colors text-sm"
+                  >
+                    🎯 Leadership Tips
+                  </button>
+                  <button
+                    onClick={() => handleQuickReply("How do I handle difficult conversations?")}
+                    className="px-4 py-2 bg-white border-2 border-gray-200 rounded-full hover:border-accent-yellow transition-colors text-sm"
+                  >
+                    🗣️ Difficult Conversations
+                  </button>
+                </div>
               </div>
             ) : (
               <>
@@ -242,17 +263,29 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
           </div>
         </div>
 
-        {/* Error Message */}
+        {/* Error Message - Improved with retry button */}
         {error && (
           <div className="px-3 sm:px-4 pb-2 flex-shrink-0">
-            <div className="max-w-4xl mx-auto p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg text-sm sm:text-base text-red-700">
-              {error}
+            <div className="max-w-4xl mx-auto p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg text-sm sm:text-base text-red-700 flex items-start gap-3">
+              <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+              <div className="flex-1">
+                <p className="font-semibold mb-1">Something went wrong</p>
+                <p>{error}</p>
+                <button
+                  onClick={() => setError(null)}
+                  className="mt-2 text-sm font-medium underline hover:no-underline"
+                >
+                  Dismiss
+                </button>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Input Form */}
-        <div className="border-t border-gray-200 bg-white px-3 sm:px-4 py-3 sm:py-4 flex-shrink-0 safe-area-bottom">
+        {/* Input Form - Sticky to ensure always visible */}
+        <div className="border-t border-gray-200 bg-white px-3 sm:px-4 py-3 sm:py-4 flex-shrink-0 safe-area-bottom sticky bottom-0">
           <form onSubmit={(e) => handleSubmit(e)} className="max-w-4xl mx-auto flex flex-col sm:flex-row gap-2 sm:gap-4">
             <input
               type="text"
@@ -260,7 +293,7 @@ export default function ChatInterface({ userId }: ChatInterfaceProps) {
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message..."
               disabled={isLoading}
-              className="flex-1 px-4 sm:px-6 py-3 sm:py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-accent-yellow focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-base sm:text-lg min-h-[48px]"
+              className="chat-input flex-1 px-4 sm:px-6 py-3 sm:py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-accent-yellow focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-base sm:text-lg min-h-[48px]"
             />
             <button
               type="submit"
