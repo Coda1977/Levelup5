@@ -64,7 +64,7 @@ test.describe('Chat Flow (Authenticated)', () => {
     await expect(menuButton).toBeVisible();
   });
 
-  test('should open conversations sidebar from right', async ({ page }) => {
+  test('should open conversations sidebar from left', async ({ page }) => {
     // Click menu button
     const menuButton = page.getByRole('button', { name: /toggle conversations/i });
     await menuButton.click();
@@ -72,8 +72,8 @@ test.describe('Chat Flow (Authenticated)', () => {
     // Sidebar should appear
     await expect(page.getByRole('button', { name: /new chat/i })).toBeVisible();
     
-    // Should be positioned on right side
-    const sidebar = page.locator('.fixed.right-0');
+    // Should be positioned on left side
+    const sidebar = page.locator('.fixed.left-0');
     await expect(sidebar).toBeVisible();
   });
 
