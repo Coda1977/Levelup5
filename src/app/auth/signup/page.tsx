@@ -99,17 +99,23 @@ function SignupForm() {
 
     console.log('Attempting to sign up with email:', email);
 
-    const { error: signUpError } = await supabase.auth.signUp({
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/learn`
+      }
     });
 
-    console.log('Sign up result:', { signUpError });
+    console.log('Sign up result:', { data, signUpError });
     if (signUpError) {
       setError(signUpError.message);
     } else {
-      setSuccess('Success! Please check your email to confirm your account.');
-      // router.push('/learn'); // Don't redirect immediately, let the user see the message
+      // Auto-login after signup (no email confirmation needed)
+      setSuccess('Account created successfully! Redirecting...');
+      setTimeout(() => {
+        router.push(redirectTo);
+      }, 1000);
     }
   };
 

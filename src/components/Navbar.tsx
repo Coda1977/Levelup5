@@ -111,7 +111,7 @@ export default function Navbar() {
           />
           
           {/* Menu Panel */}
-          <div className="absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-lg z-40 md:hidden">
+          <div className="fixed top-[60px] left-0 right-0 bg-white border-b border-gray-200 shadow-lg z-40 md:hidden animate-slideDown max-h-[calc(100vh-60px)] overflow-y-auto">
             <nav className="container-max px-4 py-4 flex flex-col gap-3">
               {session && (
                 <>
